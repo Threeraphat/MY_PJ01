@@ -1,6 +1,6 @@
 package com.example.my_pj01;
 
-public class PromotionModel extends ProductModel{
+public class PromotionModel{
     private int id;
     private String promotion;
 

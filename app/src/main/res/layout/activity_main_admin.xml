@@ -7,22 +7,10 @@
     android:background="@drawable/bg1"
     tools:context=".MainAdmin">
 
-    <android.support.v7.widget.SearchView
-        android:id="@+id/Et1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:textSize="20sp"
-        android:background="@drawable/rounded_label"
-        android:padding="5dp"/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/re_list_admin"
         android:layout_width="match_parent"
-        android:layout_margin="15dp"
-        android:background="@drawable/rounded_label"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/Et1">
+        android:layout_height="match_parent">
 
     </android.support.v7.widget.RecyclerView>
     <ImageView
