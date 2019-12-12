@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,16 +19,20 @@ import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
+public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> implements Filterable {
     private Context context;
-    private List<PromotionModel> productObjects;
+    private List<ProductModel> productObjects;
+    private List<ProductModel> productObjectsTotal;
 
-    public DataAdapter(Context context, List<PromotionModel> productObjects){
+    public DataAdapter(Context context, List<ProductModel> productObjects){
         this.context = context;
         this.productObjects = productObjects;
+        this.productObjectsTotal = new ArrayList<>(productObjects);
     }
 
     @NonNull
@@ -88,4 +94,40 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             this.c_promo = itemView.findViewById(R.id.card_promotion);
         }
     }
+
+
+    public Filter getFilter() {
+        return productFilter;
+    }
+
+    private Filter productFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<ProductModel> filteredList = new ArrayList<>();
+
+            if(constraint == null || constraint.length() == 0){
+                filteredList.addAll(productObjectsTotal);
+            }else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                /*getType Search term*/
+                for(ProductModel productItem : productObjectsTotal){
+                    if(productItem.getName().toLowerCase().contains(filterPattern)){
+                        filteredList.add(productItem);
+                    }
+
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            productObjects.clear();
+            productObjects.addAll((List)results.values);
+            notifyDataSetChanged();
+        }
+    };
 }
