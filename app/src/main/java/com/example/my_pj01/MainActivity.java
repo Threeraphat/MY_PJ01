@@ -1,7 +1,7 @@
 package com.example.my_pj01;
 
 import android.app.Dialog;
-import android.graphics.BitmapFactory;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,13 +14,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.support.v7.widget.SearchView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +33,7 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
    private Button find,cancel;
    private StorageReference c_pic;
    private File file;
+   String getType = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init(){
+        Intent intent = getIntent();
+        getType = intent.getStringExtra("type");
+        System.out.println("getType from TypeActivity---> " + getType);
         dataRecyclerView = findViewById(R.id.re_list);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("products");
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext());
                 dataRecyclerView.setLayoutManager(manager);
-                adapter = new DataAdapter(getApplicationContext(), productModels);
+                adapter = new DataAdapter(getApplicationContext(), checkDuplicationType(productModels));
                 dataRecyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 adapter.setOnItemClickListener(new DataAdapter.onRecyclerViewItemClickListener() {
@@ -168,6 +170,15 @@ public class MainActivity extends AppCompatActivity {
         find = dialog.findViewById(R.id.find);
         cancel = dialog.findViewById(R.id.cancel);
         return dialog;
+    }
+
+    private List<ProductModel> checkDuplicationType(List<ProductModel> productList) {
+        for (Iterator<ProductModel> iterator = productList.iterator(); iterator.hasNext(); ) {
+            if (!iterator.next().getType().equalsIgnoreCase(getType)) {
+                iterator.remove();
+            }
+        }
+        return productList;
     }
 
     @Override
