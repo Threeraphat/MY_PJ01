@@ -80,7 +80,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> im
         return 0;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView c_name;
         private TextView c_price;
         private TextView c_promo;
@@ -92,9 +92,26 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> im
             this.c_pic = itemView.findViewById(R.id.card_Image);
             this.c_price = itemView.findViewById(R.id.card_price);
             this.c_promo = itemView.findViewById(R.id.card_promotion);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(mItemClickListener != null){
+                mItemClickListener.onItemClickListener(v,getAdapterPosition());
+            }
         }
     }
 
+    private onRecyclerViewItemClickListener mItemClickListener;
+
+    void setOnItemClickListener(onRecyclerViewItemClickListener mItemClickListener){
+        this.mItemClickListener = mItemClickListener;
+    }
+
+    public interface onRecyclerViewItemClickListener{
+        void onItemClickListener(View view,int position);
+    }
 
     public Filter getFilter() {
         return productFilter;

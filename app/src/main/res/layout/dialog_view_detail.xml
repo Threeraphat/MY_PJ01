@@ -18,6 +18,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true">
+                <Button
+                    android:id="@+id/cancel"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_cancel"
+                    android:layout_margin="10dp"
+                    android:padding="5dp"
+                    android:text="cancel"
+                    android:layout_alignParentRight="true"
+                    android:textAllCaps="false"/>
                 <ImageView
                     android:id="@+id/Img1"
                     android:background="@drawable/rounded_label"
@@ -27,12 +37,6 @@
                     android:layout_marginBottom="5dp"
                     android:layout_width="200dp"
                     android:layout_height="200dp"/>
-                <TextView
-                    android:id="@+id/clickHere"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="คลิ๊กที่นี่เพื่อเพิ่มรูป"
-                    android:layout_centerInParent="true"/>
             </RelativeLayout>
 
 
