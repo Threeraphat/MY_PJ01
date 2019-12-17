@@ -16,8 +16,8 @@ public class Login extends AppCompatActivity {
         findViewById(R.id.guest).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // Go to activity for users
-                startActivity(new Intent(Login.this,MainActivity.class));
+                // Go to activity for users
+                startActivity(new Intent(Login.this,TypeActivity.class));
             }
         });
         findViewById(R.id.admin).setOnClickListener(new View.OnClickListener() {

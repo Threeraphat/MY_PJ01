@@ -18,6 +18,7 @@ public class LoginAdmin extends AppCompatActivity {
     EditText username,password;
     DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Admin_Account");
     String user = "none",pass = "none";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +42,7 @@ public class LoginAdmin extends AppCompatActivity {
             public void onClick(View v) {
                 if(!user.equals("none") && !pass.equals("none")) {
                     if (username.getText().toString().equals(user) && password.getText().toString().equals(pass)) {
-                        startActivity(new Intent(LoginAdmin.this, MainAdmin.class));
+                        startActivity(new Intent(LoginAdmin.this, TypeAdminActivity.class));
                         finish();
                         Login.login.finish();
                     } else {

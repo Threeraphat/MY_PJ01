@@ -4,12 +4,16 @@
     <color name="colorPrimaryDark">#D75E5E5E</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorTranparent">#8DF0F0F0</color>
+    <color name="colorTranparent_black">#8D727272</color>
 
     <color name="buttonUpdatePressed">#009688</color>
     <color name="buttonUpdateNotPressed">#A176FD5A</color>
 
     <color name="buttonDeletePressed">#E6FF00</color>
     <color name="buttonDeleteNotPressed">#A1FF0B0B</color>
+
+    <color name="buttonBackPressed">#E6FF00</color>
+    <color name="buttonBackNotPressed">#A1FFD709</color>
 
     <color name="tomato">#FF7F52</color>
 

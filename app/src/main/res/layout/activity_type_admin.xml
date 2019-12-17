@@ -9,7 +9,7 @@
     tools:context=".TypeActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/re_list_type"
+        android:id="@+id/re_list_type_admin"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

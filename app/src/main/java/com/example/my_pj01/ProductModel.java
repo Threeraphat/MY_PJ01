@@ -19,9 +19,6 @@ public class ProductModel extends PromotionModel{
         this.weight = proweight;
     }
 
-    public void getAllProduct(int id){
-    }
-
     public ProductModel(){
     }
 

@@ -1,0 +1,28 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_focused="false" android:state_pressed="false">
+        <shape>
+            <solid android:color="@color/buttonBackNotPressed" />
+            <stroke android:width="0.1dp" android:color="@color/buttonBackNotPressed" />
+            <corners android:radius="10dp" />
+
+        </shape>
+    </item>
+    <item android:state_focused="true" android:state_pressed="true">
+        <shape>
+            <solid android:color="@color/colorTranparent" />
+            <stroke android:width="0.1dp" android:color="@color/colorTranparent" />
+            <corners android:radius="10dp" />
+
+        </shape>
+    </item>
+    <item android:state_focused="false" android:state_pressed="true">
+        <shape>
+            <solid android:color="@color/colorTranparent" />
+            <stroke android:width="0.1dp" android:color="@color/colorTranparent" />
+            <corners android:radius="10dp" />
+
+        </shape>
+    </item>
+
+</selector>

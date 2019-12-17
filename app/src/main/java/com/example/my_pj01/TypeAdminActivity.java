@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class TypeActivity extends AppCompatActivity {
+public class TypeAdminActivity extends AppCompatActivity {
 
     RecyclerView dataRecyclerView;
     private TypeDataAdapter adapter;
@@ -33,14 +33,15 @@ public class TypeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_type);
+        setContentView(R.layout.activity_type_admin);
 
         //เมื่อเข้าหน้านี้ข้อมูลที่แสดงคือมีเฉพาะ type ถ้าซ้ำกันจะแสดงแค่ชื่อเดียว
         init();
 
     }
+
     private void init() {
-        dataRecyclerView = findViewById(R.id.re_list_type);
+        dataRecyclerView = findViewById(R.id.re_list_type_admin);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("products");
         readDataFromFirebase(myRef);
@@ -68,7 +69,7 @@ public class TypeActivity extends AppCompatActivity {
                 adapter.setOnItemClickListener(new TypeDataAdapter.onRecyclerViewItemClickListener() {
                     @Override
                     public void onItemClickListener(View view, int position) {
-                        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                        Intent intent = new Intent(getApplicationContext(),MainAdmin.class);
                         intent.putExtra("type",productModels.get(position).getType());
                         startActivity(intent);
                     }
@@ -94,7 +95,7 @@ public class TypeActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.guest_bar, menu);
+        inflater.inflate(R.menu.admin_bar, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
