@@ -84,7 +84,7 @@ public class ManageProductActivity extends AppCompatActivity {
             public void onClick(View v) {
                 name = edtname.getText().toString();
                 price = edtprice.getText().toString();
-                type = edttype.getText().toString();
+                type = edttype.getText().toString().toLowerCase();
                 description = edtdescription.getText().toString();
                 weight = edtweight.getText().toString();
                 productX = edtproductX.getText().toString();
@@ -93,7 +93,6 @@ public class ManageProductActivity extends AppCompatActivity {
                 column = edtcolumn.getText().toString();
                 shelf = edtshelf.getText().toString();
                 promo = edtpromo.getText().toString();
-
 
                 if(imageView.getDrawable() == null){
                     Toast.makeText(ManageProductActivity.this, "Please select image", Toast.LENGTH_SHORT).show();
@@ -108,6 +107,7 @@ public class ManageProductActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 DatabaseReference child = ref.child("Product"+String.format("%010d",id));
+                                child.child("id").setValue(id);
                                 child.child("name").setValue(name);
                                 child.child("price").setValue(price);
                                 child.child("type").setValue(type);
@@ -122,7 +122,7 @@ public class ManageProductActivity extends AppCompatActivity {
                                 child.child("promotion").setValue(promo);
                                 run_no.setValue(id+1);
                                 Toast.makeText(ManageProductActivity.this, "Upload Success.", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(ManageProductActivity.this, MainAdmin.class));
+                                startActivity(new Intent(ManageProductActivity.this, TypeAdminActivity.class));
                                 finish();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -153,7 +153,6 @@ public class ManageProductActivity extends AppCompatActivity {
             }
         });
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

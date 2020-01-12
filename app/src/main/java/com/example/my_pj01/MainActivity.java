@@ -100,8 +100,8 @@ public class MainActivity extends AppCompatActivity {
                         de_type.setText(productModels.get(position).getType());
                         de_promo.setText(productModels.get(position).getPromotion());
                         de_name.setText(productModels.get(position).getName());
-                        de_price.setText(productModels.get(position).getPrice().concat(" THB."));
-                        de_weight.setText(productModels.get(position).getWeight().concat(" Kg."));
+                        de_price.setText(productModels.get(position).getPrice());
+                        de_weight.setText(productModels.get(position).getWeight());
                         de_detail.setText(productModels.get(position).getDescription());
                         de_shelf.setText(productModels.get(position).getShelf());
                         de_row.setText(productModels.get(position).getRow());

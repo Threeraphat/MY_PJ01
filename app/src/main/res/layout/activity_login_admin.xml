@@ -13,12 +13,22 @@
         android:layout_height="48dp"
         android:background="@drawable/ic_arrow_back_black_24dp"/>
     <LinearLayout
+        android:id="@+id/li1"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:background="@drawable/rounded_label"
         android:padding="10dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="SHOP OWNER LOGIN"/>
         <EditText
             android:id="@+id/username"
             android:background="@drawable/rounded_label"
@@ -38,14 +48,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"/>
-        <Button
-            android:id="@+id/login"
-            android:layout_width="200dp"
-            android:layout_margin="10dp"
-            android:padding="10dp"
-            android:layout_gravity="center"
-            android:background="@drawable/button_update"
-            android:layout_height="wrap_content"
-            android:text="Login"/>
+
     </LinearLayout>
+    <Button
+    android:id="@+id/login"
+        android:layout_below="@+id/li1"
+        android:layout_centerHorizontal="true"
+    android:layout_width="200dp"
+    android:layout_margin="10dp"
+    android:padding="10dp"
+    android:layout_gravity="center"
+    android:background="@drawable/button_update"
+    android:layout_height="wrap_content"
+    android:text="Login"/>
 </RelativeLayout>

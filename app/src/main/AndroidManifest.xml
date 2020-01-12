@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.my_pj01">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -12,15 +12,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TypeActivity"></activity>
-        <activity android:name=".MainAdmin"
-            android:label="Products"/>
-        <activity android:name=".LoginAdmin"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".MapActivity"></activity>
+        <activity android:name=".TypeAdminActivity" />
+        <activity android:name=".TypeActivity" />
+        <activity
+            android:name=".MainAdmin"
+            android:label="Products" />
+        <activity
+            android:name=".LoginAdmin"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Login"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="keyboard|orientation|screenSize">
+            android:configChanges="keyboard|orientation|screenSize"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,9 +34,9 @@
         <activity
             android:name=".ManageProductActivity"
             android:configChanges="keyboard|orientation|screenSize" />
-        <activity android:name=".ProductDetailActivity" />
-        <activity android:name=".MainActivity"
-            android:label="Products"/>
+        <activity
+            android:name=".MainActivity"
+            android:label="Products" />
     </application>
 
 </manifest>

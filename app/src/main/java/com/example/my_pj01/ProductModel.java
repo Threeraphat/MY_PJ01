@@ -1,25 +1,11 @@
 package com.example.my_pj01;
 
-public class ProductModel extends PromotionModel{
+public class ProductModel extends PromotionModel {
     private int id;
     private String name, price, type, description, picture, productX, productY, row, column, shelf, weight;
 
-    public ProductModel(int proid, String proname, String proprice, String protype, String prodes, String propicture, String productX, String productY, String row, String column, String shelf, String proweight) {
-        this.id = proid;
-        this.name = proname;
-        this.price = proprice;
-        this.type = protype;
-        this.description = prodes;
-        this.picture = propicture;
-        this.productX = productX;
-        this.productY = productY;
-        this.row = row;
-        this.column = column;
-        this.shelf = shelf;
-        this.weight = proweight;
-    }
-
-    public ProductModel(){
+    public ProductModel() {
+        //getAll
     }
 
     public String getWeight() {

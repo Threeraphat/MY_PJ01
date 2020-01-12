@@ -14,7 +14,7 @@
             android:layout_height="wrap_content">
 
             <android.support.v7.widget.CardView
-                android:id="@+id/Relative"
+                android:id="@+id/dialog_m_relative"
                 android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -29,6 +29,14 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerInParent="true"
                     android:background="@drawable/rounded_label" />
+
+                <TextView
+                    android:id="@+id/clickHere"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="คลิ๊กที่นี่เพื่อเพิ่มรูป"
+                    android:layout_gravity="center"/>
+
             </android.support.v7.widget.CardView>
 
 
@@ -36,7 +44,7 @@
                 android:id="@+id/Relative1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/Relative"
+                android:layout_below="@+id/dialog_m_relative"
                 android:layout_margin="10dp"
                 android:background="@drawable/rounded_label"
                 app:cardCornerRadius="10dp">
@@ -246,6 +254,58 @@
                             android:layout_weight="1"
                             android:background="@drawable/rounded_label"
                             android:padding="10dp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:textStyle="bold"
+                            android:layout_weight="0.3"
+                            android:textColor="@color/tomato"
+                            android:text="X"
+                            android:padding="10dp"/>
+
+                        <EditText
+                            android:id="@+id/dialog_m_productx"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_label"
+                            android:padding="10dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:textStyle="bold"
+                            android:layout_weight="0.3"
+                            android:textColor="@color/tomato"
+                            android:text="Y"
+                            android:padding="10dp"/>
+
+                        <EditText
+                            android:id="@+id/dialog_m_producty"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_label"
+                            android:padding="10dp" />
+
+                        <Button
+                            android:id="@+id/btn_selectposition"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/button_update"
+                            android:text="Select point"/>
+
                     </LinearLayout>
 
                     <LinearLayout

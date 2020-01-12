@@ -53,7 +53,7 @@ public class TypeActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     productModel = new ProductModel();
-                    productModel.setType(ds.child("type").getValue(String.class));
+                    productModel.setType(ds.child("type").getValue(String.class).toUpperCase());
                     if(productModels.size() > 0){
                         checkDuplicationType(productModels,productModel);
                     }
