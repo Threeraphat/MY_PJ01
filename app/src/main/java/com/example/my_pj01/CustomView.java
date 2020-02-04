@@ -28,7 +28,12 @@ public class CustomView extends View {
 
     private Rect mRectsquare;
     private Paint mPaintsquare;
-    float R1, R2, R3 = 1;
+    float R1, R2, R3 = 0;
+    float x_1 = 0.90f, x_2 = 0 , x_3 = 1.8f;
+    float y_1 = 0, y_2 = 0.75f, y_3 = 0.75f;
+    double _x = 0 , _y = 0;
+    double r = 0;
+
     Handler h;
     public CustomView(Context context) {
         super(context);
@@ -155,7 +160,7 @@ public class CustomView extends View {
         DrawMap(canvas);
         DrawBeacon(canvas);
         DrawPosition(canvas);
-
+        PointUserCalculate(canvas);
         mPaintsquare.reset();
 
         postInvalidateDelayed(100);
@@ -236,10 +241,9 @@ public class CustomView extends View {
         mPaintsquare.setAntiAlias(true);
 
         int R = 20;
-
         float cy = R1*633;
         float cx = (R2*633) - (R3*633);
-        canvas.drawCircle(cx,cy,R,mPaintsquare);
+        //canvas.drawCircle(cx,cy,R,mPaintsquare);
     }
 
     private float DistanceCalculate (int rssi, int txPower){
@@ -249,8 +253,41 @@ public class CustomView extends View {
         return (float)d;
     }
 
-    private float PointUserCalculate () {
+    private void PointUserCalculate (Canvas canvas) {
 
-        return 1;
+        mPaintsquare.reset();
+        mPaintsquare.setColor(getResources().getColor(android.R.color.holo_red_light));
+        mPaintsquare.setStrokeWidth(5);
+        mPaintsquare.setTextSize(30);
+        mPaintsquare.setStyle(Paint.Style.FILL);
+        mPaintsquare.setAntiAlias(true);
+
+        //Find constant of circle #2- cirlce #1
+        float K_a = -(R1*R1)+(R2*R2)+(x_1*x_1)-(x_2*x_2)+(y_1*y_1)-(y_2*y_2);
+
+        //Find constant of circle #3- cirlce #1
+        float K_b = -(R1*R1)+(R3*R3)+(x_1*x_1)-(x_3*x_3)+(y_1*y_1)-(y_3*y_3);
+
+        //Find constants of [x=A_0+A_1*r, y=B_0+B_1*r]
+        float D = x_1*(y_2-y_3)+x_2*(y_3-y_1)+x_3*(y_1-y_2);
+        float A_0 =(K_a*(y_1-y_3)+K_b*(y_2-y_1))/(2*D);
+        float B_0 =-(K_a*(x_1-x_3)+K_b*(x_2-x_1))/(2*D);
+        float A_1 =-(R1*(y_2-y_3)+R2*(y_3-y_1)+R3*(y_1-y_2))/D;
+        float B_1 =(R1*(x_2-x_3)+R2*(x_3-x_1)+R3*(x_1-x_2))/D;
+
+        //Find constants of C_0 + 2*C_1*r + C_2^2 = 0
+        double C_0 = Math.pow(A_0 - x_1,2)+Math.pow(B_0-y_1,2)-Math.pow(R1,2);
+        double C_1 = A_1*(A_0-x_1) + B_1*(B_0-y_1)-R1;
+        double C_2 = Math.pow(A_1,2)+ Math.pow(B_1,2) - 1;
+
+        //Solve for r
+        r=(-Math.sqrt(Math.pow(C_1,2)-(C_0*C_2))-C_1)/C_2;
+
+
+        //Solve for [x,y]
+        _x = A_0+A_1*r;
+        _y = B_0+B_1*r;
+
+        canvas.drawCircle((float)_x*633,(float)_y*633,20,mPaintsquare);
     }
 }
