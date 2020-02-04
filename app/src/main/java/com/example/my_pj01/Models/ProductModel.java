@@ -1,8 +1,8 @@
-package com.example.my_pj01;
+package com.example.my_pj01.Models;
 
 public class ProductModel extends PromotionModel {
     private int id;
-    private String name, price, type, description, picture, productX, productY, row, column, shelf, weight;
+    private String name, price, type, description, picture, productX, productY, row, column, shelf, weight ,key;
 
     public ProductModel() {
         //getAll
@@ -102,5 +102,13 @@ public class ProductModel extends PromotionModel {
 
     public void setShelf(String shelf) {
         this.shelf = shelf;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

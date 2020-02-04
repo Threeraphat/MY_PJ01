@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.my_pj01.Models.ProductModel;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -127,6 +128,13 @@ public class MainActivity extends AppCompatActivity {
                         if(!dialog.isShowing()){
                             dialog.show();
                         }
+
+                        de_find.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(MainActivity.this,MapActivity.class));
+                            }
+                        });
 
                         de_cancel.setOnClickListener(new View.OnClickListener() {
                             @Override

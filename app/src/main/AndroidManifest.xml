@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.my_pj01">
 
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -12,9 +15,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MapActivity"></activity>
-        <activity android:name=".TypeAdminActivity" />
-        <activity android:name=".TypeActivity" />
+        <activity android:name=".Login"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".MapActivity"
+            android:screenOrientation="locked"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".TypeAdminActivity"
+            android:label="Product Type"/>
+        <activity android:name=".TypeActivity"
+            android:label="Product Type"/>
         <activity
             android:name=".MainAdmin"
             android:label="Products" />
@@ -22,7 +31,7 @@
             android:name=".LoginAdmin"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Login"
+            android:name=".IndexActivity"
             android:configChanges="keyboard|orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

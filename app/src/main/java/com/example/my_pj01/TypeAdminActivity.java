@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.my_pj01.Models.ProductModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,8 +35,6 @@ public class TypeAdminActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_type_admin);
-
-        //เมื่อเข้าหน้านี้ข้อมูลที่แสดงคือมีเฉพาะ type ถ้าซ้ำกันจะแสดงแค่ชื่อเดียว
         init();
 
     }
@@ -71,7 +70,10 @@ public class TypeAdminActivity extends AppCompatActivity {
                     public void onItemClickListener(View view, int position) {
                         Intent intent = new Intent(getApplicationContext(),MainAdmin.class);
                         intent.putExtra("type",productModels.get(position).getType());
-                        startActivity(intent);
+                        if(!TypeAdminActivity.this.isFinishing()){
+                            startActivity(intent);
+                            finish();
+                        }
                     }
                 });
             }
@@ -111,6 +113,18 @@ public class TypeAdminActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 adapter.getFilter().filter(newText);
                 return true;
+            }
+        });
+
+        MenuItem addProduct = menu.findItem(R.id.action_add);
+        addProduct.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if(!TypeAdminActivity.this.isFinishing()) {
+                    startActivity(new Intent(getApplicationContext(), ManageProductActivity.class));
+                    finish();
+                }
+                return false;
             }
         });
         return super.onCreateOptionsMenu(menu);

@@ -10,6 +10,8 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
+import com.example.my_pj01.Models.ProductModel;
+
 import java.util.ArrayList;
 import java.util.List;
 

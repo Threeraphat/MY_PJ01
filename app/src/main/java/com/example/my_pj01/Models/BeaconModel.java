@@ -1,4 +1,4 @@
-package com.example.my_pj01;
+package com.example.my_pj01.Models;
 
 public class BeaconModel{
     private int UUID, RSSI;

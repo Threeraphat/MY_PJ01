@@ -21,14 +21,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.ActionMenuView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.my_pj01.Models.ProductModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -73,6 +72,7 @@ public class MainAdmin extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_admin);
+        System.out.println("BAS MainAdmin");
         init();
 
         add_p = findViewById(R.id.add_pro);
@@ -94,15 +94,17 @@ public class MainAdmin extends AppCompatActivity {
         readDataFromFirebase(myRef);
     }
 
-    private void readDataFromFirebase(DatabaseReference myRef) {
+    private void readDataFromFirebase(final DatabaseReference myRef) {
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     productModel = new ProductModel();
+                    productModel.setKey(ds.getKey());
                     productModel.setColumn(ds.child("column").getValue(String.class));
                     productModel.setDescription(ds.child("description").getValue(String.class));
+                    productModel.setId(ds.child("id").getValue(Integer.class));
                     productModel.setName(ds.child("name").getValue(String.class));
                     productModel.setPicture(ds.child("picture").getValue(String.class));
                     productModel.setPrice(ds.child("price").getValue(String.class));
@@ -162,41 +164,37 @@ public class MainAdmin extends AppCompatActivity {
                         m_update.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                final ProgressDialog dialog = new ProgressDialog(MainAdmin.this);
-                                dialog.setTitle("Uploading...");
-                                dialog.show();
-                                storageReference.putFile(path).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                        ref = FirebaseDatabase.getInstance().getReference("products");
-                                        ref.child("Product"+String.format("%010d",position)).child("name").setValue(m_name.getText().toString());
-                                        ref.child("Product"+String.format("%010d",position)).child("price").setValue(m_price.getText().toString());
-                                        ref.child("Product"+String.format("%010d",position)).child("type").setValue(m_type.getText().toString());
-                                        ref.child("Product"+String.format("%010d",position)).child("description").setValue(m_detail.getText().toString());
-                                        ref.child("Product"+String.format("%010d",position)).child("weight").setValue(m_weight.getText().toString());
-                                        ref.child("Product"+String.format("%010d",position)).child("productX").setValue(m_x.getText().toString());
-                                        ref.child("Product"+String.format("%010d",position)).child("productY").setValue(m_y.getText().toString());
-                                        ref.child("Product"+String.format("%010d",position)).child("row").setValue(m_row.getText().toString());
-                                        ref.child("Product"+String.format("%010d",position)).child("column").setValue(m_column.getText().toString());
-                                        ref.child("Product"+String.format("%010d",position)).child("picture").setValue(storageReference.getPath());
-                                        ref.child("Product"+String.format("%010d",position)).child("shelf").setValue(m_shelf.getText().toString());
-                                        ref.child("Product"+String.format("%010d",position)).child("promotion").setValue(m_promotionTEXT.getText().toString());
-                                        Toast.makeText(MainAdmin.this, "Update Success.", Toast.LENGTH_SHORT).show();
+                                final ProgressDialog progressDialog = new ProgressDialog(MainAdmin.this);
+                                progressDialog.setTitle("Uploading...");
+                                progressDialog.show();
+                                if (path != null) {
+                                    uploadImageToFirebase(progressDialog, position, dialog);
+                                }else {
+                                    productModel.setKey(productModels.get(position).getKey());
+                                    productModel.setColumn(m_column.getText().toString());
+                                    productModel.setDescription(m_detail.getText().toString());
+                                    productModel.setId(productModels.get(position).getId());
+                                    productModel.setName(m_name.getText().toString());
+                                    productModel.setPicture(productModels.get(position).getPicture());
+                                    productModel.setPrice(m_price.getText().toString());
+                                    productModel.setProductX(m_x.getText().toString());
+                                    productModel.setProductY(m_y.getText().toString());
+                                    productModel.setRow(m_row.getText().toString());
+                                    productModel.setShelf(m_shelf.getText().toString());
+                                    productModel.setType(m_type.getText().toString());
+                                    productModel.setWeight(m_weight.getText().toString());
+                                    productModel.setPromotion(m_promotionTEXT.getText().toString());
+//                                    productModels.set(position,productModel);
+                                    ref.child(productModels.get(position).getKey()).setValue(productModel);
+                                    if(dialog.isShowing()) {
                                         dialog.dismiss();
                                     }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        dialog.dismiss();
-                                        Toast.makeText(MainAdmin.this, "Update Fail!", Toast.LENGTH_SHORT).show();
+                                    progressDialog.dismiss();
+                                    if(!MainAdmin.this.isFinishing()){
+                                        startActivity(new Intent(getApplicationContext(), TypeAdminActivity.class));
+                                        finish();
                                     }
-                                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                                        dialog.setMessage("Updating "
-                                                + (int)(100.0*taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount()) + "%");
-                                    }
-                                });
+                                }
                             }
                         });
 
@@ -214,8 +212,12 @@ public class MainAdmin extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 ref = FirebaseDatabase.getInstance().getReference("products");
-                                ref.child("Product"+String.format("%010d",position)).removeValue();
+                                ref.child(productModels.get(position).getKey()).removeValue();
                                 dialog.dismiss();
+                                if(!MainAdmin.this.isFinishing()){
+                                    startActivity(new Intent(getApplicationContext(),TypeAdminActivity.class));
+                                    finish();
+                                }
                             }
                         });
 
@@ -235,6 +237,54 @@ public class MainAdmin extends AppCompatActivity {
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
                 Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+    }
+
+    private void uploadImageToFirebase(final ProgressDialog progressDialog, final int position, final Dialog dialog) {
+        storageReference.putFile(path).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                productModel.setKey(productModels.get(position).getKey());
+                productModel.setColumn(m_column.getText().toString());
+                productModel.setDescription(m_detail.getText().toString());
+                productModel.setId(productModels.get(position).getId());
+                productModel.setName(m_name.getText().toString());
+                productModel.setPicture(storageReference.getPath());
+                productModel.setPrice(m_price.getText().toString());
+                productModel.setProductX(m_x.getText().toString());
+                productModel.setProductY(m_y.getText().toString());
+                productModel.setRow(m_row.getText().toString());
+                productModel.setShelf(m_shelf.getText().toString());
+                productModel.setType(m_type.getText().toString());
+                productModel.setWeight(m_weight.getText().toString());
+                productModel.setPromotion(m_promotionTEXT.getText().toString());
+               // productModels.set(position,productModel);
+                ref.child(productModels.get(position).getKey()).setValue(productModel);
+                if(dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                progressDialog.dismiss();
+//              adapter.notifyItemChanged(position,checkDuplicationType(productModels));
+                if(!MainAdmin.this.isFinishing()){
+                    startActivity(new Intent(getApplicationContext(), TypeAdminActivity.class));
+                    finish();
+                }
+                Toast.makeText(MainAdmin.this, "Update Success.", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if(dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                Toast.makeText(MainAdmin.this, "Update Fail!", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                progressDialog.setMessage("Updating "
+                        + (int) (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount()) + "%");
             }
         });
     }

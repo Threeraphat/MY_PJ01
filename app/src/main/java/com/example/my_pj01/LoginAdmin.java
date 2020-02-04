@@ -41,7 +41,7 @@ public class LoginAdmin extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!user.equals("none") && !pass.equals("none")) {
-                    if (username.getText().toString().equals(user) && password.getText().toString().equals(pass)) {
+                    if (username.getText().toString().equalsIgnoreCase(user) && password.getText().toString().equals(pass)) {
                         startActivity(new Intent(LoginAdmin.this, TypeAdminActivity.class));
                         finish();
                         Login.login.finish();
