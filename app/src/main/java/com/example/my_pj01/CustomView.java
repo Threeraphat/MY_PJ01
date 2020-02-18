@@ -15,7 +15,11 @@ import android.view.View;
 
 import com.example.my_pj01.Models.BTLE_Device;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,16 +29,38 @@ public class CustomView extends View {
     private int cellWidth, cellHeight;
     private Paint blackPaint = new Paint();
     private boolean[][] cellChecked;
-
     private Rect mRectsquare;
     private Paint mPaintsquare;
+    ArrayList<Integer> RSSIAverage_1 = new ArrayList();
+    ArrayList<Integer> RSSIAverage_2 = new ArrayList();
+    ArrayList<Integer> RSSIAverage_3 = new ArrayList();
+    int R1_sum, R2_sum, R3_sum = 0;
     float R1, R2, R3 = 0;
-    float x_1 = 0.90f, x_2 = 0 , x_3 = 1.8f;
-    float y_1 = 0, y_2 = 0.75f, y_3 = 0.75f;
-    double _x = 0 , _y = 0;
+
+    ///////////////////////////////////////////////////
+    //  ARM ROOM
+    //y = 6.0 M
+    //x = 3.9 M
+    //Beacon_1 x = 1.95f y = 0
+    //Beacon_2 x = 0 y = 3f
+    //Beacon_3 x = 3.9f y = 3f
+
+    //float x_1 = 1.95f, x_2 = 0 , x_3 = 3.90f;
+    //float y_1 = 0, y_2 = 3.00f, y_3 = 3.00f;
+    ///////////////////////////////////////////////////
+
+
+    //////////////////////////////////////////////
+    // ROOM MNR
+    // y = 900  y/2 = 450 900/9 = 100
+    // x = 600   x/2 = 300  900/6 = 150
+    float x_1 = 2.0f, x_2 = 0, x_3 = 4.0f;
+    float y_1 = 0, y_2 = 5.4f, y_3 = 5.4f;
+    double _x = 0, _y = 0;
     double r = 0;
 
     Handler h;
+
     public CustomView(Context context) {
         super(context);
         h = new Handler();
@@ -45,15 +71,7 @@ public class CustomView extends View {
         super(context, attrs);
         blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         init(attrs);
-
     }
-
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            invalidate();
-        }
-    };
 
     public CustomView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -98,92 +116,111 @@ public class CustomView extends View {
         if (numColumns < 1 || numRows < 1) {
             return;
         }
-
         cellWidth = getWidth() / numColumns;
         cellHeight = getHeight() / numRows;
-
         cellChecked = new boolean[numColumns][numRows];
 
-       // invalidate();
+        // invalidate();
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            int column = (int)(event.getX() / cellWidth);
-            int row = (int)(event.getY() / cellHeight);
-
+            int column = (int) (event.getX() / cellWidth);
+            int row = (int) (event.getY() / cellHeight);
             cellChecked[column][row] = !cellChecked[column][row];
             //invalidate();
         }
-
         return true;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
+        ReceiveBeacon();
+        //DrawGrid(canvas);
+        DrawMap(canvas);
+        DrawBeacon(canvas);
+        //DrawPosition(canvas);
+        PointUserCalculate(canvas);
+        mPaintsquare.reset();
 
+        postInvalidateDelayed(50);
+    }
+
+    int rssi1 = 0;
+    int rssi2 = 0;
+    int rssi3 = 0;
+    int measuredPower = -59; ////hard coded power value. Usually ranges between -59 to -65
+    private void ReceiveBeacon() {
         Set set = MapActivity.mBTDevicesHashMap.entrySet();
         // Get an iterator
         Iterator i = set.iterator();
 
         // Display elements
-        while(i.hasNext()) {
-            Map.Entry me = (Map.Entry)i.next();
-            if(me.getKey().equals("Beacon_1")) {
-                int rssi1 = ((BTLE_Device)me.getValue()).getRSSI();
-                String name = ((BTLE_Device)me.getValue()).getName();
-                String addr = ((BTLE_Device)me.getValue()).getAddress();
-                R1 = DistanceCalculate(rssi1,-70);
-                Log.d("BAS_TEST" , "---------->" + name + "  Distance" +  DistanceCalculate(rssi1,-70) + "  RSSI------>" + rssi1 + "  " +addr);
-                //rssi = 0;
-            }
-            else if(me.getKey().equals("Beacon_2")){
-                int rssi2 = ((BTLE_Device)me.getValue()).getRSSI();
-                String name = ((BTLE_Device)me.getValue()).getName();
-                String addr = ((BTLE_Device)me.getValue()).getAddress();
-                R2 = DistanceCalculate(rssi2,-70);
-                Log.d("BAS_TEST" , "---------->" + name + "  Distance" +  DistanceCalculate(rssi2,-70) + "  RSSI------>" + rssi2 + "  " +addr);
-                //rssi = 0;
-            }
-            else if(me.getKey().equals("Beacon_3")) {
-                int rssi3 = ((BTLE_Device)me.getValue()).getRSSI();
-                String name = ((BTLE_Device)me.getValue()).getName();
-                String addr = ((BTLE_Device)me.getValue()).getAddress();
-                R3 = DistanceCalculate(rssi3,-70);
-                Log.d("BAS_TEST" , "---------->" + name + "  Distance" +  DistanceCalculate(rssi3,-70) + "  RSSI------>" + rssi3 + "  " +addr);
-                //rssi = 0;
+        while (i.hasNext()) {
+            Map.Entry me = (Map.Entry) i.next();
+            if (me.getKey().equals("Beacon_1")) {
+                rssi1 = ((BTLE_Device) me.getValue()).getRSSI();
+                String name = ((BTLE_Device) me.getValue()).getName();
+                String addr = ((BTLE_Device) me.getValue()).getAddress();
+                RSSIAverage_1.addAll(Collections.singleton(rssi1));
+                if (RSSIAverage_1.size() > 3) {
+                    R1_sum = AverageRSSI(RSSIAverage_1); //R1_avg
+                    R1 = DistanceCalculate(R1_sum, measuredPower); //D1
+                    if(R1>2) R1 = 2;
+                    RSSIAverage_1.clear();
+                }
+
+                Log.d("BAS_TEST", "--------> RSSIAverage1 " + R1_sum);
+                Log.d("BAS_TEST", "---------->" + name + "  Distance" + DistanceCalculate(rssi1, measuredPower) + "  RSSI------>" + rssi1 + "  " + addr);
+            } else if (me.getKey().equals("Beacon_2")) {
+                rssi2 = ((BTLE_Device) me.getValue()).getRSSI();
+                String name = ((BTLE_Device) me.getValue()).getName();
+                String addr = ((BTLE_Device) me.getValue()).getAddress();
+                RSSIAverage_2.addAll(Collections.singleton(rssi2));
+                if (RSSIAverage_2.size() > 3) {
+                    R2_sum = AverageRSSI(RSSIAverage_2);
+                    R2 = DistanceCalculate(R2_sum, measuredPower);
+                    if(R2>2) R2 = 2;
+                    RSSIAverage_2.clear();
+                }
+
+                Log.d("BAS_TEST", "--------> RSSIAverage2 " + R2_sum);
+                Log.d("BAS_TEST", "---------->" + name + "  Distance" + DistanceCalculate(rssi2, measuredPower) + "  RSSI------>" + rssi2 + "  " + addr);
+            } else if (me.getKey().equals("Beacon_3")) {
+                rssi3 = ((BTLE_Device) me.getValue()).getRSSI();
+                String name = ((BTLE_Device) me.getValue()).getName();
+                String addr = ((BTLE_Device) me.getValue()).getAddress();
+                RSSIAverage_3.addAll(Collections.singleton(rssi3));
+                if (RSSIAverage_3.size() > 3) {
+                    R3_sum = AverageRSSI(RSSIAverage_3);
+                    R3 = DistanceCalculate(R3_sum, measuredPower);
+                    if(R3>2) R3 = 2;
+                    RSSIAverage_3.clear();
+                }
+
+                Log.d("BAS_TEST", "--------> RSSIAverage3 " + R3_sum);
+                Log.d("BAS_TEST", "---------->" + name + "  Distance" + DistanceCalculate(rssi3, measuredPower) + "  RSSI------>" + rssi3 + "  " + addr);
             }
         }
-
-        DrawGrid(canvas);
-        DrawMap(canvas);
-        DrawBeacon(canvas);
-        DrawPosition(canvas);
-        PointUserCalculate(canvas);
-        mPaintsquare.reset();
-
-        postInvalidateDelayed(100);
-        //invalidate();
-        //h.postDelayed(runnable,100);
     }
 
-    private void DrawMap(Canvas canvas){
+    private void DrawMap(Canvas canvas) {
         mPaintsquare.reset();
         mPaintsquare.setColor(getResources().getColor(android.R.color.darker_gray));
-        mPaintsquare.setStrokeWidth(5);
+        mPaintsquare.setStrokeWidth(15);
         mPaintsquare.setStyle(Paint.Style.STROKE);
         mPaintsquare.setAntiAlias(true);
 
-        mRectsquare.left = 20;
-        mRectsquare.top = 20;
-        mRectsquare.right = mRectsquare.left + 950;
-        mRectsquare.bottom = mRectsquare.top + 1920;
+        mRectsquare.left = 100;
+        mRectsquare.top = 100;
+        mRectsquare.right = mRectsquare.left + 900;
+        mRectsquare.bottom = mRectsquare.top + 900;
 
-        canvas.drawRect(mRectsquare,mPaintsquare);
+        canvas.drawRect(mRectsquare, mPaintsquare);
     }
 
-    private void DrawGrid(Canvas canvas){
+    private void DrawGrid(Canvas canvas) {
         if (numColumns == 0 || numRows == 0) {
             return;
         }
@@ -204,6 +241,15 @@ public class CustomView extends View {
 
         for (int i = 1; i < numColumns; i++) {
             canvas.drawLine(i * cellWidth, 0, i * cellWidth, height, blackPaint);
+
+            for (int _Col = 0; _Col < numColumns - 1; _Col++) {
+                if (_Col > 0 && _Col < numColumns - 1) {
+                    //canvas.drawRect(_Col * cellWidth);
+                }
+                for (int _Row = 0; _Row < numRows - 1; _Row++) {
+
+                }
+            }
         }
 
         for (int i = 1; i < numRows; i++) {
@@ -211,49 +257,50 @@ public class CustomView extends View {
         }
     }
 
-    private void DrawBeacon(Canvas canvas){
+    private void DrawBeacon(Canvas canvas) {
         mPaintsquare.reset();
-        mPaintsquare.setColor(Color.parseColor("#DD4F84FD"));
+        mPaintsquare.setColor(Color.parseColor("#E95E13CF"));
         mPaintsquare.setStrokeWidth(5);
         mPaintsquare.setTextSize(30);
-        mPaintsquare.setStyle(Paint.Style.FILL);
+        mPaintsquare.setStyle(Paint.Style.STROKE);
         mPaintsquare.setAntiAlias(true);
 
         int R = 20;
         //old dist = 633
-        double dist_real = 633;
+        double dist_real = 225;
 
-        canvas.drawCircle(500,30,R1*(float)dist_real,mPaintsquare);
-        canvas.drawCircle(30,950,R2*(float)dist_real,mPaintsquare);
-        canvas.drawCircle(970,950,R3*(float)dist_real,mPaintsquare);
+        canvas.drawCircle(600, 100, R1 * (float) dist_real, mPaintsquare);
+        canvas.drawCircle(100, 500, R2 * (float) dist_real, mPaintsquare);
+        canvas.drawCircle(1000, 500, R3 * (float) dist_real, mPaintsquare);
 
-        canvas.drawText("Beacon 1",430,90,mPaintsquare);
-        canvas.drawText("Beacon 2",20,1000,mPaintsquare);
-        canvas.drawText("Beacon 3",860,1000,mPaintsquare);
+        canvas.drawText("Beacon 1", 500, 100, mPaintsquare);
+        canvas.drawText("Beacon 2", 100, 500, mPaintsquare);
+        canvas.drawText("Beacon 3", 1000, 500, mPaintsquare);
     }
 
-    private void DrawPosition(Canvas canvas){
-        mPaintsquare.reset();
-        mPaintsquare.setColor(getResources().getColor(android.R.color.holo_purple));
-        mPaintsquare.setStrokeWidth(5);
-        mPaintsquare.setTextSize(30);
-        mPaintsquare.setStyle(Paint.Style.FILL);
-        mPaintsquare.setAntiAlias(true);
+//    private void DrawPosition(Canvas canvas) {
+//        mPaintsquare.reset();
+//        mPaintsquare.setColor(getResources().getColor(android.R.color.holo_purple));
+//        mPaintsquare.setStrokeWidth(5);
+//        mPaintsquare.setTextSize(30);
+//        mPaintsquare.setStyle(Paint.Style.FILL);
+//        mPaintsquare.setAntiAlias(true);
+//
+//        int R = 20;
+//        float cy = R1 * 250;
+//        float cx = (R2 * 633) - (R3 * 633);
+//        canvas.drawCircle(cx, cy + 100, R, mPaintsquare);
+//    }
 
-        int R = 20;
-        float cy = R1*633;
-        float cx = (R2*633) - (R3*633);
-        //canvas.drawCircle(cx,cy,R,mPaintsquare);
-    }
-
-    private float DistanceCalculate (int rssi, int txPower){
+    //10 ^ ((Measured Power – RSSI)/(10 * N))
+    private float DistanceCalculate(int rssi, int txPower) {
         int x = txPower - rssi;
-        float y = x/100.0f;
-        double d = Math.pow(10,y);
-        return (float)d;
+        float y = x / 30f; //n * 2
+        double d = Math.pow(10, y);
+        return (float) d;
     }
 
-    private void PointUserCalculate (Canvas canvas) {
+    private void PointUserCalculate(Canvas canvas) {
 
         mPaintsquare.reset();
         mPaintsquare.setColor(getResources().getColor(android.R.color.holo_red_light));
@@ -262,32 +309,68 @@ public class CustomView extends View {
         mPaintsquare.setStyle(Paint.Style.FILL);
         mPaintsquare.setAntiAlias(true);
 
+        canvas.drawText("beacon1 : " + rssi1 , 50, 1050, mPaintsquare);
+        canvas.drawText("beacon2 : " + rssi2, 50, 1150, mPaintsquare);
+        canvas.drawText("beacon3 : " + rssi3, 50, 1250, mPaintsquare);
+        canvas.drawText("beacon1-R1 : " + R1 , 50, 1350, mPaintsquare);
+        canvas.drawText("beacon2-R2 : " + R2, 50, 1450, mPaintsquare);
+        canvas.drawText("beacon3-R3 : " + R3, 50, 1550, mPaintsquare);
+
+        //canvas.drawText("Y_1 : " + y_1, 50, 1350, mPaintsquare);
+        //canvas.drawText("Y_2 : " + y_2, 50, 1450, mPaintsquare);
+        //canvas.drawText("Y_3 : " + y_3, 50, 1550, mPaintsquare);
+
         //Find constant of circle #2- cirlce #1
-        float K_a = -(R1*R1)+(R2*R2)+(x_1*x_1)-(x_2*x_2)+(y_1*y_1)-(y_2*y_2);
+        //float K_a = -(R1*R1)+(c)+(x_1*x_1)-(x_2*x_2)+(y_1*y_1)-(y_2*y_2);
+        float K_a = (R1 * R1) - (R2 * R2) - (x_1 * x_1) + (x_2 * x_2) - (y_1 * y_1) + (y_2 * y_2);
 
         //Find constant of circle #3- cirlce #1
-        float K_b = -(R1*R1)+(R3*R3)+(x_1*x_1)-(x_3*x_3)+(y_1*y_1)-(y_3*y_3);
+        //float K_b = -(R1*R1)+(R3*R3)+(x_1*x_1)-(x_3*x_3)+(y_1*y_1)-(y_3*y_3);
+        float K_b = (R1 * R1) - (R3 * R3) - (x_1 * x_1) + (x_3 * x_3) - (y_1 * y_1) + (y_3 * y_3);
 
         //Find constants of [x=A_0+A_1*r, y=B_0+B_1*r]
-        float D = x_1*(y_2-y_3)+x_2*(y_3-y_1)+x_3*(y_1-y_2);
-        float A_0 =(K_a*(y_1-y_3)+K_b*(y_2-y_1))/(2*D);
-        float B_0 =-(K_a*(x_1-x_3)+K_b*(x_2-x_1))/(2*D);
-        float A_1 =-(R1*(y_2-y_3)+R2*(y_3-y_1)+R3*(y_1-y_2))/D;
-        float B_1 =(R1*(x_2-x_3)+R2*(x_3-x_1)+R3*(x_1-x_2))/D;
+        float D = (x_1 * (y_2 - y_3)) + (x_2 * (y_3 - y_1)) + (x_3 * (y_1 - y_2));
+        float A_0 = ((K_a * (y_1 - y_3)) + (K_b * (y_2 - y_1))) / (2 * D);
+        float B_0 = -1 * ((K_a * (x_1 - x_3)) + (K_b * (x_2 - x_1))) / (2 * D);
+        float A_1 = -1 * ((R1 * (y_2 - y_3)) + (R2 * (y_3 - y_1)) + (R3 * (y_1 - y_2))) / D;
+        float B_1 = ((R1 * (x_2 - x_3)) + (R2 * (x_3 - x_1)) + (R3 * (x_1 - x_2))) / D;
 
         //Find constants of C_0 + 2*C_1*r + C_2^2 = 0
-        double C_0 = Math.pow(A_0 - x_1,2)+Math.pow(B_0-y_1,2)-Math.pow(R1,2);
+        /*double C_0 = Math.pow(A_0 - x_1,2)+Math.pow(B_0-y_1,2)-Math.pow(R1,2);
         double C_1 = A_1*(A_0-x_1) + B_1*(B_0-y_1)-R1;
-        double C_2 = Math.pow(A_1,2)+ Math.pow(B_1,2) - 1;
+        double C_2 = Math.pow(A_1,2)+ Math.pow(B_1,2) - 1;*/
+
+        //float C_0=(A_0*A_0)-2*A_0*x_1+(B_0*B_0)-2*B_0*y_1-(R1*R1)+(x_1*x_1)+(y_1*y_1);
+        //float C_1=A_0*A_1-A_1*x_1+B_0*B_1-B_1*y_1-R1;
+        float C_0 = (((A_0 - x_1) * (A_0 - x_1)) + (B_0 - y_1) * (B_0 - y_1)) - (R1 * R1);
+        float C_1 = (A_1 * (A_0 - x_1)) + (B_1 * (B_0 - y_1)) - R1;
+        float C_2 = (A_1 * A_1) + (B_1 * B_1) - 1;
 
         //Solve for r
-        r=(-Math.sqrt(Math.pow(C_1,2)-(C_0*C_2))-C_1)/C_2;
-
+        r = ((-1 * C_1) + (Math.sqrt(Math.pow(C_1, 2) - (C_0 * C_2)))) / C_2;
 
         //Solve for [x,y]
-        _x = A_0+A_1*r;
-        _y = B_0+B_1*r;
+        _x = A_0 + A_1 * r;
+        _y = B_0 + B_1 * r;
 
-        canvas.drawCircle((float)_x*633,(float)_y*633,20,mPaintsquare);
+        if(_x < 0) _x *= -1;
+        if(_y < 0) _y *= -1;
+
+        //Red dot
+        canvas.drawCircle((float) (_x) * 225, (float) (_y) * 225, 25, mPaintsquare);
+        Log.d("redDot", "---------->" + _x + "  " + _y);
+
+        canvas.drawText("x : " + _x, 50, 1650, mPaintsquare);
+        canvas.drawText("y : " + _y, 50, 1750, mPaintsquare);
+    }
+
+    private int AverageRSSI(List<Integer> RSSI_list) {
+        Integer sum = 0;
+        if (!RSSI_list.isEmpty()) {
+            for (Integer rssi : RSSI_list) {
+                sum += rssi;
+            }
+        }
+        return sum / RSSI_list.size();
     }
 }

@@ -14,7 +14,6 @@
         app:showAsAction="ifRoom|collapseActionView"
         />
 
-
     <item android:id="@+id/action_add"
         android:icon="@drawable/ic_queue_black_24dp"
         android:title="setting"
