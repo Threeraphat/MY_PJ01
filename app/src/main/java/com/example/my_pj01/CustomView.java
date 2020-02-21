@@ -16,7 +16,6 @@ import android.view.View;
 import com.example.my_pj01.Models.BTLE_Device;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -49,13 +48,18 @@ public class CustomView extends View {
     //float y_1 = 0, y_2 = 3.00f, y_3 = 3.00f;
     ///////////////////////////////////////////////////
 
+    //  TABLE 150 x 180 (x,y)
+    //  900 Pixel / 1.5 m(150cm)  = 600 (X)
+    //  900 Pixel / 1.8 m(180cm) = 500 (Y)
+    float x_1 = 0.75f, x_2 = 0, x_3 = 1.5f;
+    float y_1 = 0, y_2 = 0.9f, y_3 = 0.9f;
 
     //////////////////////////////////////////////
     // ROOM MNR
     // y = 900  y/2 = 450 900/9 = 100
     // x = 600   x/2 = 300  900/6 = 150
-    float x_1 = 2.0f, x_2 = 0, x_3 = 4.0f;
-    float y_1 = 0, y_2 = 5.4f, y_3 = 5.4f;
+    // x_1 = 2.0f, x_2 = 0, x_3 = 4.0f;
+    //float y_1 = 0, y_2 = 5.4f, y_3 = 5.4f;
     double _x = 0, _y = 0;
     double r = 0;
 
@@ -150,7 +154,7 @@ public class CustomView extends View {
     int rssi1 = 0;
     int rssi2 = 0;
     int rssi3 = 0;
-    int measuredPower = -59; ////hard coded power value. Usually ranges between -59 to -65
+    int measuredPower = -65; ////hard coded power value. Usually ranges between -59 to -65
     private void ReceiveBeacon() {
         Set set = MapActivity.mBTDevicesHashMap.entrySet();
         // Get an iterator
@@ -167,7 +171,7 @@ public class CustomView extends View {
                 if (RSSIAverage_1.size() > 3) {
                     R1_sum = AverageRSSI(RSSIAverage_1); //R1_avg
                     R1 = DistanceCalculate(R1_sum, measuredPower); //D1
-                    if(R1>2) R1 = 2;
+                    if(R1>1.8f) R1 = 1.8f;
                     RSSIAverage_1.clear();
                 }
 
@@ -181,7 +185,7 @@ public class CustomView extends View {
                 if (RSSIAverage_2.size() > 3) {
                     R2_sum = AverageRSSI(RSSIAverage_2);
                     R2 = DistanceCalculate(R2_sum, measuredPower);
-                    if(R2>2) R2 = 2;
+                    if(R2>1.5f) R2 = 1.5f;
                     RSSIAverage_2.clear();
                 }
 
@@ -195,7 +199,7 @@ public class CustomView extends View {
                 if (RSSIAverage_3.size() > 3) {
                     R3_sum = AverageRSSI(RSSIAverage_3);
                     R3 = DistanceCalculate(R3_sum, measuredPower);
-                    if(R3>2) R3 = 2;
+                    if(R3>1.5f) R3 = 1.5f;
                     RSSIAverage_3.clear();
                 }
 
@@ -244,7 +248,7 @@ public class CustomView extends View {
 
             for (int _Col = 0; _Col < numColumns - 1; _Col++) {
                 if (_Col > 0 && _Col < numColumns - 1) {
-                    //canvas.drawRect(_Col * cellWidth);
+
                 }
                 for (int _Row = 0; _Row < numRows - 1; _Row++) {
 
@@ -267,7 +271,7 @@ public class CustomView extends View {
 
         int R = 20;
         //old dist = 633
-        double dist_real = 225;
+        double dist_real = 500;
 
         canvas.drawCircle(600, 100, R1 * (float) dist_real, mPaintsquare);
         canvas.drawCircle(100, 500, R2 * (float) dist_real, mPaintsquare);
@@ -295,7 +299,7 @@ public class CustomView extends View {
     //10 ^ ((Measured Power – RSSI)/(10 * N))
     private float DistanceCalculate(int rssi, int txPower) {
         int x = txPower - rssi;
-        float y = x / 30f; //n * 2
+        float y = x / 30f; //n * 3
         double d = Math.pow(10, y);
         return (float) d;
     }
@@ -357,7 +361,7 @@ public class CustomView extends View {
         if(_y < 0) _y *= -1;
 
         //Red dot
-        canvas.drawCircle((float) (_x) * 225, (float) (_y) * 225, 25, mPaintsquare);
+        canvas.drawCircle((float) (_x) * 500, (float) (_y) * 600, 25, mPaintsquare);
         Log.d("redDot", "---------->" + _x + "  " + _y);
 
         canvas.drawText("x : " + _x, 50, 1650, mPaintsquare);

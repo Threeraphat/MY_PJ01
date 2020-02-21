@@ -53,7 +53,7 @@ public class TypeAdminActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     productModel = new ProductModel();
-                    productModel.setType(ds.child("type").getValue(String.class));
+                    productModel.setType(ds.child("type").getValue(String.class).toLowerCase());
                     if(productModels.size() > 0){
                         checkDuplicationType(productModels,productModel);
                     }
@@ -72,7 +72,6 @@ public class TypeAdminActivity extends AppCompatActivity {
                         intent.putExtra("type",productModels.get(position).getType());
                         if(!TypeAdminActivity.this.isFinishing()){
                             startActivity(intent);
-                            finish();
                         }
                     }
                 });

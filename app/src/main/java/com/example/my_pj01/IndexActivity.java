@@ -11,7 +11,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
@@ -44,7 +43,7 @@ public class IndexActivity extends AppCompatActivity {
             // Bluetooth is not enabled :)
         } else {
             // Bluetooth is enabled
-            sendOnChannel1(IndexActivity.this,"Indoor Preference Application","Promotion");
+            sendOnChannel1(IndexActivity.this,"Indoor Preference Application","Promotions");
         }
 
         Handler handler = new Handler();

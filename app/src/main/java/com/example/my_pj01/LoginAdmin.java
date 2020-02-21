@@ -44,7 +44,6 @@ public class LoginAdmin extends AppCompatActivity {
                     if (username.getText().toString().equalsIgnoreCase(user) && password.getText().toString().equals(pass)) {
                         startActivity(new Intent(LoginAdmin.this, TypeAdminActivity.class));
                         finish();
-                        Login.login.finish();
                     } else {
                         Toast.makeText(LoginAdmin.this, "กรุณากรอกบัญชีผู้ใช้งานและรหัสผ่านอีกครั้ง", Toast.LENGTH_SHORT).show();
                         username.setText("");

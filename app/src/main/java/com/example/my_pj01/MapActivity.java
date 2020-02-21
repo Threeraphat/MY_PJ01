@@ -47,7 +47,7 @@ public class MapActivity extends AppCompatActivity {
         Log.d("Scanner",mBTLeScanner.toString());
         customView.setNumColumns(20);
         customView.setNumRows(40);
-        setContentView(customView);
+        //setContentView(customView);
     }
 
     @Override

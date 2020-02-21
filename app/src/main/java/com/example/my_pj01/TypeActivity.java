@@ -35,7 +35,6 @@ public class TypeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_type);
-
         //เมื่อเข้าหน้านี้ข้อมูลที่แสดงคือมีเฉพาะ type ถ้าซ้ำกันจะแสดงแค่ชื่อเดียว
         init();
 
@@ -54,7 +53,7 @@ public class TypeActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     productModel = new ProductModel();
-                    productModel.setType(ds.child("type").getValue(String.class).toUpperCase());
+                    productModel.setType(ds.child("type").getValue(String.class).toLowerCase());
                     if(productModels.size() > 0){
                         checkDuplicationType(productModels,productModel);
                     }

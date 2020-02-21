@@ -25,13 +25,13 @@
             android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".TypeAdminActivity"
+            android:name=".TypeAdminActivity" android:launchMode="singleTop"
             android:label="Product Type" />
         <activity
-            android:name=".TypeActivity"
+            android:name=".TypeActivity" android:launchMode="singleTop"
             android:label="Product Type" />
         <activity
-            android:name=".MainAdmin"
+            android:name=".MainAdmin" android:launchMode="singleTop"
             android:label="Products" />
         <activity
             android:name=".LoginAdmin"
@@ -45,12 +45,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity>หห
         <activity
-            android:name=".ManageProductActivity"
+            android:name=".ManageProductActivity" android:launchMode="singleTop"
             android:configChanges="keyboard|orientation|screenSize" />
         <activity
-            android:name=".MainActivity"
+            android:name=".MainActivity" android:launchMode="singleTop"
             android:label="Products" />
     </application>
 

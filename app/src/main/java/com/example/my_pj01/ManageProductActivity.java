@@ -10,9 +10,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +43,7 @@ public class ManageProductActivity extends AppCompatActivity {
     TextView clickHere;
     String name, price, type, description, productX, productY, row, column, shelf, weight, promo;
     int id;
-    EditText edtname, edtprice, edttype,edtweight , edtdescription, edtproductX, edtproductY, edtrow, edtcolumn, edtshelf, edtpromo;
+    EditText edtname, edtprice, edttype,edtweight , edtdescription, edtproductX, edtproductY, edtrow, edtcolumn, edtshelf;
     DatabaseReference ref = FirebaseDatabase.getInstance().getReference("products");
     DatabaseReference run_no = FirebaseDatabase.getInstance().getReference("running");
 
@@ -49,6 +51,8 @@ public class ManageProductActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_product);
+        final Spinner aSpinner = findViewById(R.id.in_promo);
+
         relativeLayout = findViewById(R.id.Relative);
         clickHere = findViewById(R.id.clickHere);
         imageView = findViewById(R.id.in_Img1);
@@ -57,12 +61,13 @@ public class ManageProductActivity extends AppCompatActivity {
         edttype = findViewById(R.id.in_type);
         edtdescription = findViewById(R.id.in_detail);
         edtweight = findViewById(R.id.in_weight);
-        edtproductX = findViewById(R.id.in_ProductX);
-        edtproductY = findViewById(R.id.in_ProductY);
+        //edtproductX = findViewById(R.id.in_ProductX);
+        //edtproductY = findViewById(R.id.in_ProductY);
         edtrow = findViewById(R.id.in_row);
         edtcolumn = findViewById(R.id.in_column);
         edtshelf = findViewById(R.id.in_shelf);
-        edtpromo = findViewById(R.id.in_promo);
+        //edtpromo = findViewById(R.id.in_promo);
+
         storageReference = FirebaseStorage.getInstance().getReference("Product_Images/"+ UUID.randomUUID().toString());
         run_no.addValueEventListener(new ValueEventListener() {
             @Override
@@ -87,16 +92,14 @@ public class ManageProductActivity extends AppCompatActivity {
                 type = edttype.getText().toString().toLowerCase();
                 description = edtdescription.getText().toString();
                 weight = edtweight.getText().toString();
-                productX = edtproductX.getText().toString();
-                productY = edtproductY.getText().toString();
                 row = edtrow.getText().toString();
                 column = edtcolumn.getText().toString();
                 shelf = edtshelf.getText().toString();
-                promo = edtpromo.getText().toString();
+                promo = aSpinner.getSelectedItem().toString();
 
                 if(imageView.getDrawable() == null){
                     Toast.makeText(ManageProductActivity.this, "Please select image", Toast.LENGTH_SHORT).show();
-                }else if(name.equals("") || price.equals("") || type.equals("") || description.equals("") || weight.equals("") || productX.equals("") || productY.equals("") || row.equals("") || column.equals("") || shelf.equals("")){
+                }else if(name.equals("") || price.equals("") || type.equals("") || description.equals("") || weight.equals("") || row.equals("") || column.equals("") || shelf.equals("") || promo.equals("")){
                     Toast.makeText(ManageProductActivity.this, "Please enter data all field", Toast.LENGTH_SHORT).show();
                 }else{
                     if(path != null){
@@ -113,8 +116,6 @@ public class ManageProductActivity extends AppCompatActivity {
                                 child.child("type").setValue(type);
                                 child.child("description").setValue(description);
                                 child.child("weight").setValue(weight);
-                                child.child("productX").setValue(productX);
-                                child.child("productY").setValue(productY);
                                 child.child("row").setValue(row);
                                 child.child("column").setValue(column);
                                 child.child("picture").setValue(storageReference.getPath());
@@ -122,8 +123,11 @@ public class ManageProductActivity extends AppCompatActivity {
                                 child.child("promotion").setValue(promo);
                                 run_no.setValue(id+1);
                                 Toast.makeText(ManageProductActivity.this, "Upload Success.", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(ManageProductActivity.this, TypeAdminActivity.class));
-                                finish();
+
+                                if (!ManageProductActivity.this.isFinishing()) {
+                                    startActivity(new Intent(getApplicationContext(), TypeAdminActivity.class));
+                                    finish();
+                                }
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override

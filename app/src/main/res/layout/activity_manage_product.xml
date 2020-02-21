@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg1"
+    android:background="@drawable/bg2"
     tools:context=".ManageProductActivity">
 <RelativeLayout
     android:layout_width="match_parent"
@@ -38,8 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/Relative"
-        android:layout_margin="10dp"
-        android:background="@color/colorTranparent">
+        android:layout_margin="10dp">
 
         <LinearLayout
             android:id="@+id/Liniear1"
@@ -88,41 +87,7 @@
                 android:background="@drawable/rounded_label"
                 android:padding="10dp"
                 android:layout_margin="5dp"/>
-            <LinearLayout
-                android:id="@+id/Liniear3"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/in_ProductX"
-                    android:hint="ProductX"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:padding="10dp"
-                    android:layout_margin="5dp"
-                    android:maxLines="1"
-                    android:background="@drawable/rounded_label"
-                    android:layout_height="wrap_content"/>
-                <EditText
-                    android:id="@+id/in_ProductY"
-                    android:hint="ProductY"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_label"
-                    android:maxLines="1"
-                    android:layout_weight="1"
-                    android:padding="10dp"
-                    android:layout_margin="5dp"/>
-                <Button
-                    android:id="@+id/btn_selectposition"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="10dp"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/button_update"
-                    android:text="Select point"/>
-            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/Liniear2"
                 android:orientation="horizontal"
@@ -136,6 +101,7 @@
                     android:layout_weight="1"
                     android:layout_margin="5dp"
                     android:padding="10dp"
+                    android:inputType="number"
                     android:hint="Shelf"/>
                 <EditText
                     android:id="@+id/in_row"
@@ -144,6 +110,7 @@
                     android:background="@drawable/rounded_label"
                     android:layout_weight="1"
                     android:layout_margin="5dp"
+                    android:inputType="number"
                     android:padding="10dp"
                     android:hint="Row"/>
                 <EditText
@@ -153,17 +120,18 @@
                     android:background="@drawable/rounded_label"
                     android:layout_weight="1"
                     android:layout_margin="5dp"
+                    android:inputType="number"
                     android:padding="10dp"
                     android:hint="Column"/>
             </LinearLayout>
-            <EditText
+            <Spinner
                 android:id="@+id/in_promo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_label"
                 android:layout_margin="5dp"
                 android:padding="10dp"
-                android:hint="Promotion description"/>
+                android:entries="@array/Spinner_items" />
         </LinearLayout>
     </RelativeLayout>
     <LinearLayout
