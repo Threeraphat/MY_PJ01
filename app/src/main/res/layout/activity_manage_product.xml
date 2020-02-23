@@ -65,6 +65,7 @@
                 android:id="@+id/in_price"
                 android:layout_below="@+id/name"
                 android:layout_margin="5dp"
+                android:inputType="number"
                 android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -73,6 +74,7 @@
             <EditText
                 android:id="@+id/in_weight"
                 android:hint="Weight"
+                android:inputType="number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_label"
@@ -145,20 +147,22 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/button_update"
-            android:layout_margin="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:padding="5dp"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:layout_below="@+id/Relative1"
             android:text="Update"/>
         <Button
-            android:id="@+id/delete"
+            android:id="@+id/back"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@drawable/button_delete"
-            android:layout_margin="10dp"
+            android:background="@drawable/button_back"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
             android:padding="5dp"
-            android:layout_weight="1"
-            android:text="Delete"/>
+            android:layout_weight="0.5"
+            android:text="Back"/>
     </LinearLayout>
 </RelativeLayout>
 </ScrollView>

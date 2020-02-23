@@ -19,6 +19,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Login"
+            android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MapActivity"
@@ -26,31 +27,38 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".TypeAdminActivity" android:launchMode="singleTop"
+            android:screenOrientation="locked"
             android:label="Product Type" />
         <activity
             android:name=".TypeActivity" android:launchMode="singleTop"
+            android:screenOrientation="locked"
             android:label="Product Type" />
         <activity
             android:name=".MainAdmin" android:launchMode="singleTop"
+            android:screenOrientation="locked"
             android:label="Products" />
         <activity
             android:name=".LoginAdmin"
+            android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".IndexActivity"
             android:configChanges="keyboard|orientation|screenSize"
+            android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>หห
+        </activity>
         <activity
             android:name=".ManageProductActivity" android:launchMode="singleTop"
+            android:screenOrientation="locked"
             android:configChanges="keyboard|orientation|screenSize" />
         <activity
             android:name=".MainActivity" android:launchMode="singleTop"
+            android:screenOrientation="locked"
             android:label="Products" />
     </application>
 

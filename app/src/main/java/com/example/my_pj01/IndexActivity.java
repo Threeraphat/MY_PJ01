@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,8 +16,7 @@ import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
-
-import static com.example.my_pj01.App.CHANNEL_1_ID;
+import static com.example.my_pj01.App.channel;
 
 public class IndexActivity extends AppCompatActivity {
 
@@ -23,6 +24,7 @@ public class IndexActivity extends AppCompatActivity {
     LinearLayout layoutTop,layoutBottom;
     Animation upToDown,downToUp;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +45,7 @@ public class IndexActivity extends AppCompatActivity {
             // Bluetooth is not enabled :)
         } else {
             // Bluetooth is enabled
-            sendOnChannel1(IndexActivity.this,"Indoor Preference Application","Promotions");
+            addNotification(IndexActivity.this,"Indoor Preference Application","Promotions");
         }
 
         Handler handler = new Handler();
@@ -57,15 +59,13 @@ public class IndexActivity extends AppCompatActivity {
         }, 4000);
     }
 
-    public void sendOnChannel1(IndexActivity v, String title, String message) {
-
-        Bitmap img = BitmapFactory.decodeResource(getResources(),R.drawable.ic_notifications_black_24dp);
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void addNotification(IndexActivity v, String title, String message) {
+        Notification notification = new NotificationCompat.Builder(this,channel.getId())
                 .setSmallIcon(R.drawable.ic_one)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setGroup(title)
-                .setLargeIcon(img)
                 .setColor(Color.GREEN)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)

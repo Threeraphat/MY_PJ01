@@ -144,7 +144,6 @@ public class CustomView extends View {
         //DrawGrid(canvas);
         DrawMap(canvas);
         DrawBeacon(canvas);
-        //DrawPosition(canvas);
         PointUserCalculate(canvas);
         mPaintsquare.reset();
 
@@ -281,20 +280,6 @@ public class CustomView extends View {
         canvas.drawText("Beacon 2", 100, 500, mPaintsquare);
         canvas.drawText("Beacon 3", 1000, 500, mPaintsquare);
     }
-
-//    private void DrawPosition(Canvas canvas) {
-//        mPaintsquare.reset();
-//        mPaintsquare.setColor(getResources().getColor(android.R.color.holo_purple));
-//        mPaintsquare.setStrokeWidth(5);
-//        mPaintsquare.setTextSize(30);
-//        mPaintsquare.setStyle(Paint.Style.FILL);
-//        mPaintsquare.setAntiAlias(true);
-//
-//        int R = 20;
-//        float cy = R1 * 250;
-//        float cx = (R2 * 633) - (R3 * 633);
-//        canvas.drawCircle(cx, cy + 100, R, mPaintsquare);
-//    }
 
     //10 ^ ((Measured Power – RSSI)/(10 * N))
     private float DistanceCalculate(int rssi, int txPower) {

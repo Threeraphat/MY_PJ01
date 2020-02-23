@@ -2,13 +2,22 @@ package com.example.my_pj01;
 
 import android.app.Application;
 import android.app.NotificationChannel;
+import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class App extends Application {
 
-    public static final String CHANNEL_1_ID = "channel1";
-    public static final String CHANNEL_2_ID = "channel2";
+    public static final String CHANNEL_ID = "Promotion Notification";
+    public static final String CHANNEL_NAME = "Promotion";
+    public static final String GROUP_ID = "Promotion_Group";
+    public static final String GROUP_NAME = "Promotion";
+    public static int importance_Level = NotificationManager.IMPORTANCE_DEFAULT;
+    public static NotificationChannelGroup group;
+    public static NotificationChannel channel;
 
     @Override
     public void onCreate() {
@@ -19,24 +28,13 @@ public class App extends Application {
 
     private void  createNotificationChannels(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel1 = new NotificationChannel(
-                    CHANNEL_1_ID,
-                        "Channel 1",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            channel1.setDescription("This is Channel 1");
+            channel = new NotificationChannel(CHANNEL_ID,CHANNEL_NAME,importance_Level);
+            group = new NotificationChannelGroup(GROUP_ID,GROUP_NAME);
+            channel.setGroup(group.getId());
 
-            NotificationChannel channel2 = new NotificationChannel(
-                    CHANNEL_2_ID,
-                    "Channel 2",
-                    NotificationManager.IMPORTANCE_LOW
-            );
-            channel2.setDescription("This is Channel 2");
-
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel1);
-            manager.createNotificationChannel(channel2);
+            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.createNotificationChannelGroup(group);
+            manager.createNotificationChannel(channel);
         }
-
     }
 }

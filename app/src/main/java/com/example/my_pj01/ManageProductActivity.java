@@ -84,6 +84,16 @@ public class ManageProductActivity extends AppCompatActivity {
 
             }
         });
+        findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!ManageProductActivity.this.isFinishing()) {
+                    startActivity(new Intent(getApplicationContext(), TypeAdminActivity.class));
+                    finish();
+                }
+            }
+        });
+
         findViewById(R.id.update).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
