@@ -4,11 +4,6 @@ public class PromotionModel{
     private int id;
     private String promotion;
 
-    public PromotionModel(int id, String promotion){
-        this.id = id;
-        this.promotion = promotion;
-    }
-
     public PromotionModel(){
     }
 

@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg2"
     tools:context=".MapActivity">
 
     <FrameLayout
-        android:id="@+id/Framlayout"
+        android:id="@+id/frame_1"
         android:layout_margin="5dp"
         android:background="@drawable/rounded_map"
         android:layout_width="match_parent"
@@ -20,7 +21,7 @@
     </FrameLayout>
 
     <RelativeLayout
-        android:layout_below="@+id/Framlayout"
+        android:layout_below="@+id/frame_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button

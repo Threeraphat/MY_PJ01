@@ -2,7 +2,7 @@ package com.example.my_pj01.Models;
 
 public class ProductModel extends PromotionModel {
     private int id;
-    private String name, price, type, description, picture, productX, productY, row, column, shelf, weight ,key;
+    private String name, price, type, description, picture, row, column, shelf, weight ,key;
 
     public ProductModel() {
         //getAll
@@ -62,22 +62,6 @@ public class ProductModel extends PromotionModel {
 
     public void setPicture(String picture) {
         this.picture = picture;
-    }
-
-    public String getProductX() {
-        return productX;
-    }
-
-    public void setProductX(String productX) {
-        this.productX = productX;
-    }
-
-    public String getProductY() {
-        return productY;
-    }
-
-    public void setProductY(String productY) {
-        this.productY = productY;
     }
 
     public String getRow() {

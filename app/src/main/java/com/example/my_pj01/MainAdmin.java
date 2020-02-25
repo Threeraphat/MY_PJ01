@@ -63,7 +63,7 @@ public class MainAdmin extends AppCompatActivity {
     ProductModel productModel;
     DatabaseReference ref = FirebaseDatabase.getInstance().getReference("products");
     private ImageView m_img, add_p;
-    private EditText m_type, m_name, m_price, m_weight, m_detail, m_shelf, m_row, m_column, m_x, m_y;
+    private EditText m_type, m_name, m_price, m_weight, m_detail, m_shelf, m_row, m_column;
     private Button m_update, m_remove, m_back;
     private StorageReference storageReference;
     private File file;
@@ -75,6 +75,7 @@ public class MainAdmin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_admin);
         System.out.println("BAS MainAdmin");
+        Utils.FullScreen(this);
         init();
     }
 

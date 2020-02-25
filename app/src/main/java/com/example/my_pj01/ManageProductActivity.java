@@ -41,9 +41,9 @@ public class ManageProductActivity extends AppCompatActivity {
     Bitmap bitmap;
     RelativeLayout relativeLayout;
     TextView clickHere;
-    String name, price, type, description, productX, productY, row, column, shelf, weight, promo;
+    String name, price, type, description, row, column, shelf, weight, promo;
     int id;
-    EditText edtname, edtprice, edttype,edtweight , edtdescription, edtproductX, edtproductY, edtrow, edtcolumn, edtshelf;
+    EditText edtname, edtprice, edttype,edtweight , edtdescription, edtrow, edtcolumn, edtshelf;
     DatabaseReference ref = FirebaseDatabase.getInstance().getReference("products");
     DatabaseReference run_no = FirebaseDatabase.getInstance().getReference("running");
 
@@ -51,6 +51,7 @@ public class ManageProductActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_product);
+        Utils.FullScreen(this);
         final Spinner aSpinner = findViewById(R.id.in_promo);
 
         relativeLayout = findViewById(R.id.Relative);
@@ -61,12 +62,9 @@ public class ManageProductActivity extends AppCompatActivity {
         edttype = findViewById(R.id.in_type);
         edtdescription = findViewById(R.id.in_detail);
         edtweight = findViewById(R.id.in_weight);
-        //edtproductX = findViewById(R.id.in_ProductX);
-        //edtproductY = findViewById(R.id.in_ProductY);
         edtrow = findViewById(R.id.in_row);
         edtcolumn = findViewById(R.id.in_column);
         edtshelf = findViewById(R.id.in_shelf);
-        //edtpromo = findViewById(R.id.in_promo);
 
         storageReference = FirebaseStorage.getInstance().getReference("Product_Images/"+ UUID.randomUUID().toString());
         run_no.addValueEventListener(new ValueEventListener() {

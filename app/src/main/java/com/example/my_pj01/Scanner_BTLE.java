@@ -14,15 +14,15 @@ import java.io.UnsupportedEncodingException;
  */
 public class Scanner_BTLE {
 
-    private MapActivity ma;
+    private IndexActivity ma;
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
     private Handler mHandler;
     private long scanPeriod;
     private int signalStrength;
 
-    public Scanner_BTLE(MapActivity mapActivity, long scanPeriod, int signalStrength) {
-        ma = mapActivity;
+    public Scanner_BTLE(IndexActivity indexActivity, long scanPeriod, int signalStrength) {
+        ma = indexActivity;
 
         mHandler = new Handler();
 

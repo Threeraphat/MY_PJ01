@@ -1,5 +1,7 @@
 package com.example.my_pj01;
 
+import android.app.Activity;
+import android.app.Application;
 import android.app.Notification;
 import android.content.Context;
 import android.graphics.Color;
@@ -16,8 +18,8 @@ public class NotificationService {
     public static NotificationManagerCompat notificationManager;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void addNotification(View v, String title, String message) {
-        Notification notification = new NotificationCompat.Builder(v.getContext(),channel.getId())
+    public static void addNotification(Context v,String title, String message) {
+        Notification notification = new NotificationCompat.Builder(v,channel.getId())
                 .setSmallIcon(R.drawable.ic_one)
                 .setContentTitle(title)
                 .setContentText(message)

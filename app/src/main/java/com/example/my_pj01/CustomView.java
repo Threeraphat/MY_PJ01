@@ -10,8 +10,11 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 
 import com.example.my_pj01.Models.BTLE_Device;
 
@@ -35,7 +38,6 @@ public class CustomView extends View {
     ArrayList<Integer> RSSIAverage_3 = new ArrayList();
     int R1_sum, R2_sum, R3_sum = 0;
     float R1, R2, R3 = 0;
-
     ///////////////////////////////////////////////////
     //  ARM ROOM
     //y = 6.0 M
@@ -140,8 +142,10 @@ public class CustomView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        setNumColumns(30);
+        setNumRows(30);
         ReceiveBeacon();
-        //DrawGrid(canvas);
+        DrawGrid(canvas);
         DrawMap(canvas);
         DrawBeacon(canvas);
         PointUserCalculate(canvas);
@@ -155,7 +159,7 @@ public class CustomView extends View {
     int rssi3 = 0;
     int measuredPower = -65; ////hard coded power value. Usually ranges between -59 to -65
     private void ReceiveBeacon() {
-        Set set = MapActivity.mBTDevicesHashMap.entrySet();
+        Set set = IndexActivity.mBTDevicesHashMap.entrySet();
         // Get an iterator
         Iterator i = set.iterator();
 
@@ -212,15 +216,19 @@ public class CustomView extends View {
         mPaintsquare.reset();
         mPaintsquare.setColor(getResources().getColor(android.R.color.darker_gray));
         mPaintsquare.setStrokeWidth(15);
-        mPaintsquare.setStyle(Paint.Style.STROKE);
+        mPaintsquare.setStyle(Paint.Style.FILL);
         mPaintsquare.setAntiAlias(true);
 
-        mRectsquare.left = 100;
-        mRectsquare.top = 100;
-        mRectsquare.right = mRectsquare.left + 900;
-        mRectsquare.bottom = mRectsquare.top + 900;
+        if(numColumns == 0 || numRows == 0) {
+            return;
+        }
 
-        canvas.drawRect(mRectsquare, mPaintsquare);
+        for (int i = 0; i < numColumns; i++) {
+            for (int j = 0; j < numRows; j++) {
+
+
+            }
+        }
     }
 
     private void DrawGrid(Canvas canvas) {
@@ -262,23 +270,52 @@ public class CustomView extends View {
 
     private void DrawBeacon(Canvas canvas) {
         mPaintsquare.reset();
-        mPaintsquare.setColor(Color.parseColor("#E95E13CF"));
-        mPaintsquare.setStrokeWidth(5);
         mPaintsquare.setTextSize(30);
-        mPaintsquare.setStyle(Paint.Style.STROKE);
         mPaintsquare.setAntiAlias(true);
+
+        if (numColumns == 0 || numRows == 0) {
+            return;
+        }
 
         int R = 20;
         //old dist = 633
         double dist_real = 500;
 
-        canvas.drawCircle(600, 100, R1 * (float) dist_real, mPaintsquare);
-        canvas.drawCircle(100, 500, R2 * (float) dist_real, mPaintsquare);
-        canvas.drawCircle(1000, 500, R3 * (float) dist_real, mPaintsquare);
 
-        canvas.drawText("Beacon 1", 500, 100, mPaintsquare);
-        canvas.drawText("Beacon 2", 100, 500, mPaintsquare);
-        canvas.drawText("Beacon 3", 1000, 500, mPaintsquare);
+        for (int i = 0; i < numColumns; i++) {
+            for (int j = 0; j < numRows; j++) {
+                if (i == 0 && j > 13 && j < 16){
+                    mPaintsquare.setStyle(Paint.Style.FILL);
+                    mPaintsquare.setColor(getResources().getColor(android.R.color.holo_red_light));
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
+                    if(j == 14) {
+                        canvas.drawText("Beacon 2", (i+1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
+                    }
+                }
+                else if(i > 13 && i < 16 && j == 0){
+                    mPaintsquare.setStyle(Paint.Style.FILL);
+                    mPaintsquare.setColor(getResources().getColor(android.R.color.holo_green_light));
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
+                    if(i == 14) {
+                        canvas.drawText("Beacon 1", (i-1) * cellWidth, (j + 2) * cellHeight, mPaintsquare);
+                    }
+                }
+                else if(i == 29 && j > 13 && j < 16){
+                    mPaintsquare.setStyle(Paint.Style.FILL);
+                    mPaintsquare.setColor(getResources().getColor(android.R.color.holo_blue_light));
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
+                    if(j == 15) {
+                        canvas.drawText("Beacon 3", (i-4) * cellWidth, (j) * cellHeight, mPaintsquare);
+                    }
+                }
+            }
+        }
+        mPaintsquare.setStyle(Paint.Style.STROKE);
+        mPaintsquare.setColor(Color.parseColor("#E95E13CF"));
+        mPaintsquare.setStrokeWidth(5);
+        canvas.drawCircle((numColumns / 2 )* cellWidth, 0 * cellHeight, R1 * (float) dist_real, mPaintsquare);
+        canvas.drawCircle(0 * cellWidth,  (numRows / 2 )* cellHeight, R2 * (float) dist_real, mPaintsquare);
+        canvas.drawCircle(numColumns * cellWidth, (numRows / 2 )* cellHeight, R3 * (float) dist_real, mPaintsquare);
     }
 
     //10 ^ ((Measured Power – RSSI)/(10 * N))
@@ -292,12 +329,14 @@ public class CustomView extends View {
     private void PointUserCalculate(Canvas canvas) {
 
         mPaintsquare.reset();
-        mPaintsquare.setColor(getResources().getColor(android.R.color.holo_red_light));
+        mPaintsquare.setColor(getResources().getColor(android.R.color.holo_green_light));
         mPaintsquare.setStrokeWidth(5);
         mPaintsquare.setTextSize(30);
         mPaintsquare.setStyle(Paint.Style.FILL);
         mPaintsquare.setAntiAlias(true);
 
+        canvas.drawText("MapScale_Width : " + getWidth() , 50, 850, mPaintsquare);
+        canvas.drawText("MapScale_Height  : " + getHeight() , 50, 950, mPaintsquare);
         canvas.drawText("beacon1 : " + rssi1 , 50, 1050, mPaintsquare);
         canvas.drawText("beacon2 : " + rssi2, 50, 1150, mPaintsquare);
         canvas.drawText("beacon3 : " + rssi3, 50, 1250, mPaintsquare);

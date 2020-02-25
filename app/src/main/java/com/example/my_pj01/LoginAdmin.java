@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ public class LoginAdmin extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_admin);
+        Utils.FullScreen(this);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -52,12 +54,6 @@ public class LoginAdmin extends AppCompatActivity {
                 }else{
                     Toast.makeText(LoginAdmin.this, "กรุญาตรวจสอบการเชื่อมต่อระบบอินเทอร์เน็ตของคุณ", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-        findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
             }
         });
     }

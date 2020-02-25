@@ -1,5 +1,6 @@
 package com.example.my_pj01;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Notification;
@@ -8,12 +9,14 @@ import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 /**
@@ -43,5 +46,15 @@ public class Utils {
         Toast toast = Toast.makeText(context, string, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER | Gravity.BOTTOM, 0, 0);
         toast.show();
+    }
+    public static void FullScreen(Activity activity) {
+        activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+    public static void CheckOpenLocation(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            activity.requestPermissions(new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, 456);
+        }
     }
 }

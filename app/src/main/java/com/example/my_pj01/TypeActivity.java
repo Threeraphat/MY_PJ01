@@ -35,6 +35,7 @@ public class TypeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_type);
+        Utils.FullScreen(this);
         //เมื่อเข้าหน้านี้ข้อมูลที่แสดงคือมีเฉพาะ type ถ้าซ้ำกันจะแสดงแค่ชื่อเดียว
         init();
 

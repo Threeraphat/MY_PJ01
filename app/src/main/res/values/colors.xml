@@ -18,5 +18,6 @@
     <color name="buttonBackNotPressed">#A1FFD709</color>
 
     <color name="tomato">#8D6253</color>
+    <color name="bg_map">#E88D8D8D</color>
 
 </resources>

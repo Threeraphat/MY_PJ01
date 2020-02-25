@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Utils.FullScreen(this);
         init();
     }
 
@@ -80,8 +81,6 @@ public class MainActivity extends AppCompatActivity {
                     productModel.setName(ds.child("name").getValue(String.class));
                     productModel.setPicture(ds.child("picture").getValue(String.class));
                     productModel.setPrice(ds.child("price").getValue(String.class));
-                    productModel.setProductX(ds.child("productX").getValue(String.class));
-                    productModel.setProductY(ds.child("productY").getValue(String.class));
                     productModel.setRow(ds.child("row").getValue(String.class));
                     productModel.setShelf(ds.child("shelf").getValue(String.class));
                     productModel.setType(ds.child("type").getValue(String.class));
