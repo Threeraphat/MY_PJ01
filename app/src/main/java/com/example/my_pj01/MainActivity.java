@@ -3,6 +3,7 @@ package com.example.my_pj01;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
     List<ProductModel> productModels = new ArrayList<>();
     ProductModel productModel;
     private ImageView de_img;
-    private TextView de_type,de_promo,de_name,de_price,de_weight,de_detail,de_shelf,de_row,de_column;
-    private Button de_find,de_cancel;
+    private TextView de_type, de_promo, de_name, de_price, de_weight, de_detail, de_shelf, de_row, de_column;
+    private Button de_find, de_cancel;
     private StorageReference c_pic;
     private File file;
     String getType = "";
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         init();
     }
 
-    private void init(){
+    private void init() {
         Intent intent = getIntent();
         getType = intent.getStringExtra("type");
         //System.out.println("getType from TypeActivity---> " + getType);
@@ -124,21 +125,24 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                        if(!dialog.isShowing()){
+                        if (!dialog.isShowing()) {
                             dialog.show();
                         }
 
                         de_find.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                startActivity(new Intent(MainActivity.this,MapActivity.class));
+                                if (!MainActivity.this.isFinishing()) {
+                                    startActivity(new Intent(getApplicationContext(), MapActivity.class));
+                                }
+                                dialog.dismiss();
                             }
                         });
 
                         de_cancel.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(dialog.isShowing()){
+                                if (dialog.isShowing()) {
                                     dialog.dismiss();
                                 }
                             }
@@ -191,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.guest_bar,menu);
+        inflater.inflate(R.menu.guest_bar, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();

@@ -4,7 +4,9 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
@@ -59,7 +61,7 @@ public class Scanner_BTLE {
     private void scanLeDevice(final boolean enable) {
         Log.d("Scanner", String.valueOf(mScanning));
 //        if (enable && !mScanning) {
-        Utils.toast(ma.getApplicationContext(), "Starting BLE scan...");
+        //Utils.toast(ma.getApplicationContext(), "Starting BLE scan...");
 
         // Stops scanning after a pre-defined scan period.
 //            mHandler.postDelayed(new Runnable() {
@@ -102,6 +104,7 @@ public class Scanner_BTLE {
             final int new_rssi = rssi;
             if (rssi > signalStrength) {
                 mHandler.post(new Runnable() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void run() {
                         ma.addDevice(device, new_rssi);

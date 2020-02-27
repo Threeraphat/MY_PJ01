@@ -1,23 +1,16 @@
 package com.example.my_pj01;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
-
 import com.example.my_pj01.Models.BTLE_Device;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -33,6 +26,7 @@ public class CustomView extends View {
     private boolean[][] cellChecked;
     private Rect mRectsquare;
     private Paint mPaintsquare;
+
     ArrayList<Integer> RSSIAverage_1 = new ArrayList();
     ArrayList<Integer> RSSIAverage_2 = new ArrayList();
     ArrayList<Integer> RSSIAverage_3 = new ArrayList();
@@ -218,17 +212,6 @@ public class CustomView extends View {
         mPaintsquare.setStrokeWidth(15);
         mPaintsquare.setStyle(Paint.Style.FILL);
         mPaintsquare.setAntiAlias(true);
-
-        if(numColumns == 0 || numRows == 0) {
-            return;
-        }
-
-        for (int i = 0; i < numColumns; i++) {
-            for (int j = 0; j < numRows; j++) {
-
-
-            }
-        }
     }
 
     private void DrawGrid(Canvas canvas) {
@@ -252,15 +235,6 @@ public class CustomView extends View {
 
         for (int i = 1; i < numColumns; i++) {
             canvas.drawLine(i * cellWidth, 0, i * cellWidth, height, blackPaint);
-
-            for (int _Col = 0; _Col < numColumns - 1; _Col++) {
-                if (_Col > 0 && _Col < numColumns - 1) {
-
-                }
-                for (int _Row = 0; _Row < numRows - 1; _Row++) {
-
-                }
-            }
         }
 
         for (int i = 1; i < numRows; i++) {
@@ -280,7 +254,6 @@ public class CustomView extends View {
         int R = 20;
         //old dist = 633
         double dist_real = 500;
-
 
         for (int i = 0; i < numColumns; i++) {
             for (int j = 0; j < numRows; j++) {
@@ -311,10 +284,18 @@ public class CustomView extends View {
             }
         }
         mPaintsquare.setStyle(Paint.Style.STROKE);
-        mPaintsquare.setColor(Color.parseColor("#E95E13CF"));
+        mPaintsquare.setColor(getResources().getColor(android.R.color.holo_green_light));
         mPaintsquare.setStrokeWidth(5);
         canvas.drawCircle((numColumns / 2 )* cellWidth, 0 * cellHeight, R1 * (float) dist_real, mPaintsquare);
+
+        mPaintsquare.setStyle(Paint.Style.STROKE);
+        mPaintsquare.setColor(getResources().getColor(android.R.color.holo_red_light));
+        mPaintsquare.setStrokeWidth(5);
         canvas.drawCircle(0 * cellWidth,  (numRows / 2 )* cellHeight, R2 * (float) dist_real, mPaintsquare);
+
+        mPaintsquare.setStyle(Paint.Style.STROKE);
+        mPaintsquare.setColor(getResources().getColor(android.R.color.holo_blue_light));
+        mPaintsquare.setStrokeWidth(5);
         canvas.drawCircle(numColumns * cellWidth, (numRows / 2 )* cellHeight, R3 * (float) dist_real, mPaintsquare);
     }
 
@@ -335,8 +316,8 @@ public class CustomView extends View {
         mPaintsquare.setStyle(Paint.Style.FILL);
         mPaintsquare.setAntiAlias(true);
 
-        canvas.drawText("MapScale_Width : " + getWidth() , 50, 850, mPaintsquare);
-        canvas.drawText("MapScale_Height  : " + getHeight() , 50, 950, mPaintsquare);
+        canvas.drawText("MapScale_Width : " + numColumns * cellWidth, 50, 850, mPaintsquare);
+        canvas.drawText("MapScale_Height  : " + numRows * cellHeight , 50, 950, mPaintsquare);
         canvas.drawText("beacon1 : " + rssi1 , 50, 1050, mPaintsquare);
         canvas.drawText("beacon2 : " + rssi2, 50, 1150, mPaintsquare);
         canvas.drawText("beacon3 : " + rssi3, 50, 1250, mPaintsquare);
@@ -384,12 +365,15 @@ public class CustomView extends View {
         if(_x < 0) _x *= -1;
         if(_y < 0) _y *= -1;
 
+
+        if(_x >= 3.0f) _x = 1.5f;
+        if(_y >= 1.8f) _y = 2.67f;
         //Red dot
         canvas.drawCircle((float) (_x) * 500, (float) (_y) * 600, 25, mPaintsquare);
         Log.d("redDot", "---------->" + _x + "  " + _y);
 
-        canvas.drawText("x : " + _x, 50, 1650, mPaintsquare);
-        canvas.drawText("y : " + _y, 50, 1750, mPaintsquare);
+        canvas.drawText("x : " + _x, 50, 550, mPaintsquare);
+        canvas.drawText("y : " + _y, 50, 650, mPaintsquare);
     }
 
     private int AverageRSSI(List<Integer> RSSI_list) {

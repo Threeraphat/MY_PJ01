@@ -1,17 +1,16 @@
 package com.example.my_pj01;
 
-import android.Manifest;
 import android.app.Notification;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
-import android.os.SystemClock;
+import android.os.Parcel;
+import android.os.ParcelUuid;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
@@ -44,16 +43,18 @@ public class IndexActivity extends AppCompatActivity {
     public static HashMap<String, BTLE_Device> mBTDevicesHashMap;
     private BroadcastReceiver_BTState mBTStateUpdateReceiver;
     private Scanner_BTLE mBTLeScanner;
-
     private NotificationManagerCompat notificationManager;
+    boolean isState = false;
+    protected String addr_b1 = "30:AE:A4:F4:87:32";
+    protected String addr_b2 = "24:6F:28:9D:6E:AE";
+    protected String addr_b3 = "A4:CF:12:75:0A:6A";
+
     LinearLayout layoutTop, layoutBottom;
     Animation upToDown, downToUp;
     List<PromotionModel> promotionModels = new ArrayList<>();
     PromotionModel promotionModel;
-    BluetoothAdapter mBluetoothAdapter;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("products");
-    String getPromo = "";
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -96,18 +97,6 @@ public class IndexActivity extends AppCompatActivity {
         }, 4000);
     }
 
-    private List<PromotionModel> checkDuplicationPromotion(List<PromotionModel> promoList) {
-        String last_promo = "";
-        for (PromotionModel promo : promoList) {
-            last_promo = promo.getPromotion();
-            Log.d("TAG12", "--------------->" + last_promo);
-            if (!promo.getPromotion().equals(last_promo)) {
-                promoList.add(promo);
-            }
-        }
-        return promoList;
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -124,13 +113,13 @@ public class IndexActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Utils.toast(this, "onStart BLE scan...");
+        //Utils.toast(this, "onStart BLE scan...");
         registerReceiver(mBTStateUpdateReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
     }
 
     @Override
     protected void onResume() {
-        Utils.toast(this, "Resume BLE scan...");
+        //Utils.toast(this, "Resume BLE scan...");
         super.onResume();
 
     }
@@ -138,21 +127,21 @@ public class IndexActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Utils.toast(this, "onPause BLE scan...");
+        //Utils.toast(this, "onPause BLE scan...");
         stopScan();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Utils.toast(this, "onStop BLE scan...");
+        //Utils.toast(this, "onStop BLE scan...");
         unregisterReceiver(mBTStateUpdateReceiver);
         stopScan();
     }
 
     @Override
     public void onDestroy() {
-        Utils.toast(this, "onDestroy BLE scan...");
+        //Utils.toast(this, "onDestroy BLE scan...");
         super.onDestroy();
     }
 
@@ -171,18 +160,28 @@ public class IndexActivity extends AppCompatActivity {
         }
     }
 
+    private void checkDuplicationPromotion(List<PromotionModel> promoList, PromotionModel promotionModel) {
+        for (Iterator<PromotionModel> iterator = promoList.iterator(); iterator.hasNext(); ) {
+            if (iterator.next().getPromotion().equalsIgnoreCase(promotionModel.getPromotion())) {
+                iterator.remove();
+            }
+        }
+    }
+
     /**
      * Adds a device to the ArrayList and Hashmap that the ListAdapter is keeping track of.
      *
      * @param device the BluetoothDevice to be added
      * @param rssi   the rssi of the BluetoothDevice
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void addDevice(BluetoothDevice device, int rssi) {
 
         String name = device.getName();
-        if (name == null) return;
-        if (!name.equals("Beacon_1") && !name.equals("Beacon_2") && !name.equals("Beacon_3")) return;
         String address = device.getAddress();
+        if (address == null) return;
+        if (!address.equals(addr_b1) && !address.equals(addr_b2) && !address.equals(addr_b3))
+            return;
 
         if (!mBTDevicesHashMap.containsKey(address)) {
             BTLE_Device btleDevice = new BTLE_Device(device);
@@ -195,34 +194,47 @@ public class IndexActivity extends AppCompatActivity {
             mBTDevicesHashMap.get(name).setName(name);
             mBTDevicesHashMap.get(address).setRSSI(rssi);
 
-            if(name.equals("Beacon_1") || name.equals("Beacon_2") || name.equals("Beacon_3")) {
+            if (isState == false) {
+                if (name.equals("Beacon_1") || name.equals("Beacon_2") || name.equals("Beacon_3")) {
+                    myRef.addValueEventListener(new ValueEventListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.O)
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                promotionModel = new PromotionModel();
+                                promotionModel.setPromotion(ds.child("promotion").getValue().toString());
+                                if (promotionModels.size() > 0) {
+                                    checkDuplicationPromotion(promotionModels, promotionModel);
+                                }
+                                if (!promotionModel.getPromotion().equals("No promotion")) {
+                                    promotionModels.add(promotionModel);
+                                }
+                            }
 
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.O)
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            promotionModel = new PromotionModel();
-                            promotionModel.setPromotion(ds.child("promotion").getValue().toString());
-                            promotionModels.add(promotionModel);
+                            String sum_text = "";
+                            for (int i = 0; i < promotionModels.size(); i++) {
+                                String msg = promotionModels.get(i).getPromotion();
+                                sum_text = sum_text.concat("- " + msg + System.getProperty("line.separator"));
+                                if (i == promotionModels.size() - 1) {
+                                    addNotification("Indoor Preference Application", sum_text);
+                                }
+                            }
+                            promotionModels.clear();
                         }
-                        checkDuplicationPromotion(promotionModels);
 
-                        for (int i = 0; i < promotionModels.size(); i++) {
-                            String msg = promotionModels.get(i).getPromotion();
-                            addNotification("Indoor Preference Application", msg);
+                        @Override
+                        public void onCancelled(DatabaseError error) {
+                            // Failed to read value
+
                         }
-                        promotionModels.clear();
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                        // Failed to read value
-
-                    }
-                    //NotificationService.addNotification(this,"test","test");
-                });
+                        //NotificationService.addNotification(this,"test","test");
+                    });
+                }
+                isState = true;
+            } else {
+                isState = true;
             }
+
         }
     }
 
@@ -232,6 +244,8 @@ public class IndexActivity extends AppCompatActivity {
                 .setSmallIcon(R.drawable.ic_one)
                 .setContentTitle(title)
                 .setContentText(message)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(message))
                 .setColor(Color.GREEN)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setGroup(title)
@@ -249,7 +263,7 @@ public class IndexActivity extends AppCompatActivity {
      * Changes the scan button text.
      */
     public void startScan() {
-        Utils.toast(this, "startScan");
+        //Utils.toast(this, "startScan");
         mBTDevicesHashMap.clear();
         mBTLeScanner.start();
     }
@@ -259,7 +273,7 @@ public class IndexActivity extends AppCompatActivity {
      * Changes the scan button text.
      */
     public void stopScan() {
-        Utils.toast(this, "Stopscan");
+        //Utils.toast(this, "Stopscan");
         mBTLeScanner.stop();
     }
 }

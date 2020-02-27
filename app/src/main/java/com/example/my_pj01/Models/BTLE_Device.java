@@ -9,7 +9,7 @@ public class BTLE_Device {
 
     private BluetoothDevice bluetoothDevice;
     private int rssi;
-    private String name;
+    private String namespace, uuid;
 
     public BTLE_Device(BluetoothDevice bluetoothDevice) {
         this.bluetoothDevice = bluetoothDevice;
@@ -20,15 +20,15 @@ public class BTLE_Device {
     }
 
     public String getName() {
-        return name;
+        return namespace;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.namespace = name;
     }
 
-    public String getUUID(){
-        return String.valueOf(bluetoothDevice.getUuids());
+    public String getUUID() {
+        return bluetoothDevice.getUuids().toString();
     }
 
     public void setRSSI(int rssi) {

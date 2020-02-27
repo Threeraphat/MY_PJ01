@@ -59,7 +59,6 @@ public class TypeActivity extends AppCompatActivity {
                         checkDuplicationType(productModels,productModel);
                     }
                     productModels.add(productModel);
-
                 }
                 LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext());
                 dataRecyclerView.setLayoutManager(manager);
