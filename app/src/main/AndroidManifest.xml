@@ -22,7 +22,7 @@
             android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MapActivity"
+            android:name=".MapActivity" android:launchMode="singleTop"
             android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

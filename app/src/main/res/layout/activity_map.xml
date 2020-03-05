@@ -7,12 +7,25 @@
     android:background="@drawable/bg2"
     tools:context=".MapActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:gravity="center"
+        android:text="Navigation map"
+        android:textColor="@android:color/white"
+        android:textSize="40sp"
+        android:textStyle="bold" />
+
     <FrameLayout
         android:id="@+id/frame_1"
-        android:layout_margin="5dp"
-        android:background="@drawable/rounded_map"
         android:layout_width="match_parent"
-        android:layout_height="620dp">
+        android:layout_height="520dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/rounded_map">
+
         <com.example.my_pj01.CustomView
             android:id="@+id/customView"
             android:layout_width="match_parent"
@@ -20,20 +33,4 @@
             android:layout_margin="5dp" />
     </FrameLayout>
 
-    <RelativeLayout
-        android:layout_below="@+id/frame_1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/btn_find_finish"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/button_update"
-            android:padding="5dp"
-            android:textSize="16sp"
-            android:text="Finish or back"
-            android:textAllCaps="false" />
-    </RelativeLayout>
 </RelativeLayout>

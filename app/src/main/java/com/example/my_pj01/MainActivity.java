@@ -3,7 +3,6 @@ package com.example.my_pj01;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -96,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
                 adapter.setOnItemClickListener(new DataAdapter.onRecyclerViewItemClickListener() {
                     @Override
-                    public void onItemClickListener(View view, int position) {
+                    public void onItemClickListener(View view, final int position) {
                         final Dialog dialog = getDialog();
                         de_type.setText(productModels.get(position).getType());
                         de_promo.setText(productModels.get(position).getPromotion());
@@ -133,7 +132,9 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 if (!MainActivity.this.isFinishing()) {
-                                    startActivity(new Intent(getApplicationContext(), MapActivity.class));
+                                    Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+                                    intent.putExtra("shelf", productModels.get(position).getShelf());
+                                    startActivity(intent);
                                 }
                                 dialog.dismiss();
                             }

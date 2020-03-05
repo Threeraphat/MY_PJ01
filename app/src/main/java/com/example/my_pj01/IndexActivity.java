@@ -45,9 +45,9 @@ public class IndexActivity extends AppCompatActivity {
     private Scanner_BTLE mBTLeScanner;
     private NotificationManagerCompat notificationManager;
     boolean isState = false;
-    protected String addr_b1 = "30:AE:A4:F4:87:32";
-    protected String addr_b2 = "24:6F:28:9D:6E:AE";
-    protected String addr_b3 = "A4:CF:12:75:0A:6A";
+    final private String addr_b1 = "30:AE:A4:F4:87:32";
+    final private String addr_b2 = "24:6F:28:9D:6E:AE";
+    final private String addr_b3 = "A4:CF:12:75:0A:6A";
 
     LinearLayout layoutTop, layoutBottom;
     Animation upToDown, downToUp;

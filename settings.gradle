@@ -1,2 +1,2 @@
-include ':app'
+include ':app', ':Pathfinder-for-Android-master'
 rootProject.name='MY_PJ01'

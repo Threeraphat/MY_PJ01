@@ -2,15 +2,22 @@ package com.example.my_pj01;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
+
 import com.example.my_pj01.Models.BTLE_Device;
+import com.ichbingrumpig.pathfinder.OnPathFoundListener;
+import com.ichbingrumpig.pathfinder.Pathfinder;
+import com.ichbingrumpig.pathfinder.Settings;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -26,6 +33,13 @@ public class CustomView extends View {
     private boolean[][] cellChecked;
     private Rect mRectsquare;
     private Paint mPaintsquare;
+    int X_Start = 0, Y_Start = 0;
+    int X_Stop = 0, Y_Stop = 0;
+
+    int[][] gameGrid;
+    private static final int GRID_VALUE_SHELF = 1;
+    private static final int GRID_VALUE_FREE = 0;
+    private static final int GRID_VALUE_BOULDERS_STARTING_VALUE = 4;
 
     ArrayList<Integer> RSSIAverage_1 = new ArrayList();
     ArrayList<Integer> RSSIAverage_2 = new ArrayList();
@@ -45,8 +59,8 @@ public class CustomView extends View {
     ///////////////////////////////////////////////////
 
     //  TABLE 150 x 180 (x,y)
-    //  900 Pixel / 1.5 m(150cm)  = 600 (X)
-    //  900 Pixel / 1.8 m(180cm) = 500 (Y)
+    //  1028 Pixel / 1.5 m(150cm)  = 685 (X)
+    //  1339 Pixel / 1.8 m(180cm) = 744 (Y)
     float x_1 = 0.75f, x_2 = 0, x_3 = 1.5f;
     float y_1 = 0, y_2 = 0.9f, y_3 = 0.9f;
 
@@ -59,11 +73,8 @@ public class CustomView extends View {
     double _x = 0, _y = 0;
     double r = 0;
 
-    Handler h;
-
     public CustomView(Context context) {
         super(context);
-        h = new Handler();
         init(null);
     }
 
@@ -123,6 +134,7 @@ public class CustomView extends View {
         // invalidate();
     }
 
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -139,19 +151,21 @@ public class CustomView extends View {
         setNumColumns(30);
         setNumRows(30);
         ReceiveBeacon();
-        DrawGrid(canvas);
-        DrawMap(canvas);
+        DrawGridMap(canvas);
         DrawBeacon(canvas);
         PointUserCalculate(canvas);
+        drawPath(canvas);
+        drawShelf(canvas);
         mPaintsquare.reset();
 
-        postInvalidateDelayed(50);
+        postInvalidateDelayed(10);
     }
 
     int rssi1 = 0;
     int rssi2 = 0;
     int rssi3 = 0;
     int measuredPower = -65; ////hard coded power value. Usually ranges between -59 to -65
+
     private void ReceiveBeacon() {
         Set set = IndexActivity.mBTDevicesHashMap.entrySet();
         // Get an iterator
@@ -168,7 +182,7 @@ public class CustomView extends View {
                 if (RSSIAverage_1.size() > 3) {
                     R1_sum = AverageRSSI(RSSIAverage_1); //R1_avg
                     R1 = DistanceCalculate(R1_sum, measuredPower); //D1
-                    if(R1>1.8f) R1 = 1.8f;
+                    if (R1 > 1.8f) R1 = 1.8f;
                     RSSIAverage_1.clear();
                 }
 
@@ -182,7 +196,7 @@ public class CustomView extends View {
                 if (RSSIAverage_2.size() > 3) {
                     R2_sum = AverageRSSI(RSSIAverage_2);
                     R2 = DistanceCalculate(R2_sum, measuredPower);
-                    if(R2>1.5f) R2 = 1.5f;
+                    if (R2 > 1.5f) R2 = 1.5f;
                     RSSIAverage_2.clear();
                 }
 
@@ -196,7 +210,7 @@ public class CustomView extends View {
                 if (RSSIAverage_3.size() > 3) {
                     R3_sum = AverageRSSI(RSSIAverage_3);
                     R3 = DistanceCalculate(R3_sum, measuredPower);
-                    if(R3>1.5f) R3 = 1.5f;
+                    if (R3 > 1.5f) R3 = 1.5f;
                     RSSIAverage_3.clear();
                 }
 
@@ -206,15 +220,12 @@ public class CustomView extends View {
         }
     }
 
-    private void DrawMap(Canvas canvas) {
+    private void DrawGridMap(Canvas canvas) {
         mPaintsquare.reset();
         mPaintsquare.setColor(getResources().getColor(android.R.color.darker_gray));
-        mPaintsquare.setStrokeWidth(15);
+        mPaintsquare.setStrokeWidth(1);
         mPaintsquare.setStyle(Paint.Style.FILL);
         mPaintsquare.setAntiAlias(true);
-    }
-
-    private void DrawGrid(Canvas canvas) {
         if (numColumns == 0 || numRows == 0) {
             return;
         }
@@ -223,22 +234,19 @@ public class CustomView extends View {
         int height = getHeight();
 
         for (int i = 0; i < numColumns; i++) {
-            for (int j = 0; j < numRows; j++) {
-                if (cellChecked[i][j]) {
-
-                    canvas.drawRect(i * cellWidth, j * cellHeight,
-                            (i + 1) * cellWidth, (j + 1) * cellHeight,
-                            blackPaint);
-                }
+            if (i % 5 == 0) {
+                canvas.drawLine(i * cellWidth, 0, i * cellWidth, height, blackPaint);
+            } else {
+                canvas.drawLine(i * cellWidth, 0, i * cellWidth, height, mPaintsquare);
             }
         }
 
-        for (int i = 1; i < numColumns; i++) {
-            canvas.drawLine(i * cellWidth, 0, i * cellWidth, height, blackPaint);
-        }
-
-        for (int i = 1; i < numRows; i++) {
-            canvas.drawLine(0, i * cellHeight, width, i * cellHeight, blackPaint);
+        for (int i = 0; i < numRows; i++) {
+            if (i % 5 == 0) {
+                canvas.drawLine(0, i * cellHeight, width, i * cellHeight, blackPaint);
+            } else {
+                canvas.drawLine(0, i * cellHeight, width, i * cellHeight, mPaintsquare);
+            }
         }
     }
 
@@ -253,32 +261,30 @@ public class CustomView extends View {
 
         int R = 20;
         //old dist = 633
-        double dist_real = 500;
+        double dist_real = 744;
 
         for (int i = 0; i < numColumns; i++) {
             for (int j = 0; j < numRows; j++) {
-                if (i == 0 && j > 13 && j < 16){
+                if (i == 0 && j > 13 && j < 16) {
                     mPaintsquare.setStyle(Paint.Style.FILL);
                     mPaintsquare.setColor(getResources().getColor(android.R.color.holo_red_light));
                     canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
-                    if(j == 14) {
-                        canvas.drawText("Beacon 2", (i+1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
+                    if (j == 14) {
+                        canvas.drawText("Beacon 2", (i + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
                     }
-                }
-                else if(i > 13 && i < 16 && j == 0){
+                } else if (i > 13 && i < 16 && j == 0) {
                     mPaintsquare.setStyle(Paint.Style.FILL);
                     mPaintsquare.setColor(getResources().getColor(android.R.color.holo_green_light));
                     canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
-                    if(i == 14) {
-                        canvas.drawText("Beacon 1", (i-1) * cellWidth, (j + 2) * cellHeight, mPaintsquare);
+                    if (i == 14) {
+                        canvas.drawText("Beacon 1", (i - 1) * cellWidth, (j + 2) * cellHeight, mPaintsquare);
                     }
-                }
-                else if(i == 29 && j > 13 && j < 16){
+                } else if (i == 29 && j > 13 && j < 16) {
                     mPaintsquare.setStyle(Paint.Style.FILL);
                     mPaintsquare.setColor(getResources().getColor(android.R.color.holo_blue_light));
                     canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
-                    if(j == 15) {
-                        canvas.drawText("Beacon 3", (i-4) * cellWidth, (j) * cellHeight, mPaintsquare);
+                    if (j == 15) {
+                        canvas.drawText("Beacon 3", (i - 4) * cellWidth, (j) * cellHeight, mPaintsquare);
                     }
                 }
             }
@@ -286,17 +292,59 @@ public class CustomView extends View {
         mPaintsquare.setStyle(Paint.Style.STROKE);
         mPaintsquare.setColor(getResources().getColor(android.R.color.holo_green_light));
         mPaintsquare.setStrokeWidth(5);
-        canvas.drawCircle((numColumns / 2 )* cellWidth, 0 * cellHeight, R1 * (float) dist_real, mPaintsquare);
+        canvas.drawCircle((numColumns / 2) * cellWidth, 0 * cellHeight, R1 * (float) dist_real, mPaintsquare);
 
         mPaintsquare.setStyle(Paint.Style.STROKE);
         mPaintsquare.setColor(getResources().getColor(android.R.color.holo_red_light));
         mPaintsquare.setStrokeWidth(5);
-        canvas.drawCircle(0 * cellWidth,  (numRows / 2 )* cellHeight, R2 * (float) dist_real, mPaintsquare);
+        canvas.drawCircle(0 * cellWidth, (numRows / 2) * cellHeight, R2 * (float) dist_real, mPaintsquare);
 
         mPaintsquare.setStyle(Paint.Style.STROKE);
         mPaintsquare.setColor(getResources().getColor(android.R.color.holo_blue_light));
         mPaintsquare.setStrokeWidth(5);
-        canvas.drawCircle(numColumns * cellWidth, (numRows / 2 )* cellHeight, R3 * (float) dist_real, mPaintsquare);
+        canvas.drawCircle(numColumns * cellWidth, (numRows / 2) * cellHeight, R3 * (float) dist_real, mPaintsquare);
+    }
+
+    private void drawShelf(Canvas canvas) {
+        mPaintsquare.reset();
+        mPaintsquare.setTextSize(30);
+        mPaintsquare.setAntiAlias(true);
+
+        if (numColumns == 0 || numRows == 0) {
+            return;
+        }
+
+        for (int i = 0; i < numColumns; i++) {
+            for (int j = 0; j < numRows; j++) {
+                if (i > 9 && i < 15 && j == 6) { ////Shelf 1
+                    mPaintsquare.setStyle(Paint.Style.FILL);
+                    mPaintsquare.setColor(getResources().getColor(android.R.color.darker_gray));
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
+                    if (i == 10) {
+                        mPaintsquare.setStyle(Paint.Style.FILL);
+                        mPaintsquare.setColor(getResources().getColor(android.R.color.holo_blue_dark));
+                        canvas.drawText("Shelf 1", (i + 1) * cellWidth, j * cellHeight, mPaintsquare);
+                    }
+                } else if (i > 9 && i < 15 && j == 7) {
+                    mPaintsquare.setStyle(Paint.Style.FILL);
+                    mPaintsquare.setColor(getResources().getColor(android.R.color.darker_gray));
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
+                } else if (i > 19 && i < 25 && j == 6) { ////Shelf 2
+                    mPaintsquare.setStyle(Paint.Style.FILL);
+                    mPaintsquare.setColor(getResources().getColor(android.R.color.darker_gray));
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
+                    if (i == 20) {
+                        mPaintsquare.setStyle(Paint.Style.FILL);
+                        mPaintsquare.setColor(getResources().getColor(android.R.color.holo_blue_dark));
+                        canvas.drawText("Shelf 2", (i + 1) * cellWidth, j * cellHeight, mPaintsquare);
+                    }
+                } else if (i > 19 && i < 25 && j == 7) {
+                    mPaintsquare.setStyle(Paint.Style.FILL);
+                    mPaintsquare.setColor(getResources().getColor(android.R.color.darker_gray));
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
+                }
+            }
+        }
     }
 
     //10 ^ ((Measured Power – RSSI)/(10 * N))
@@ -311,30 +359,25 @@ public class CustomView extends View {
 
         mPaintsquare.reset();
         mPaintsquare.setColor(getResources().getColor(android.R.color.holo_green_light));
-        mPaintsquare.setStrokeWidth(5);
+        mPaintsquare.setStrokeWidth(30);
         mPaintsquare.setTextSize(30);
         mPaintsquare.setStyle(Paint.Style.FILL);
         mPaintsquare.setAntiAlias(true);
 
-        canvas.drawText("MapScale_Width : " + numColumns * cellWidth, 50, 850, mPaintsquare);
-        canvas.drawText("MapScale_Height  : " + numRows * cellHeight , 50, 950, mPaintsquare);
-        canvas.drawText("beacon1 : " + rssi1 , 50, 1050, mPaintsquare);
-        canvas.drawText("beacon2 : " + rssi2, 50, 1150, mPaintsquare);
-        canvas.drawText("beacon3 : " + rssi3, 50, 1250, mPaintsquare);
-        canvas.drawText("beacon1-R1 : " + R1 , 50, 1350, mPaintsquare);
-        canvas.drawText("beacon2-R2 : " + R2, 50, 1450, mPaintsquare);
-        canvas.drawText("beacon3-R3 : " + R3, 50, 1550, mPaintsquare);
+        canvas.drawText("MapScale_Width : " + getWidth(), 50, 850, mPaintsquare);
+        canvas.drawText("MapScale_Height  : " + getHeight(), 50, 950, mPaintsquare);
 
-        //canvas.drawText("Y_1 : " + y_1, 50, 1350, mPaintsquare);
-        //canvas.drawText("Y_2 : " + y_2, 50, 1450, mPaintsquare);
-        //canvas.drawText("Y_3 : " + y_3, 50, 1550, mPaintsquare);
+//        canvas.drawText("beacon1 : " + rssi1, 50, 1050, mPaintsquare);
+//        canvas.drawText("beacon2 : " + rssi2, 50, 1150, mPaintsquare);
+//        canvas.drawText("beacon3 : " + rssi3, 50, 1250, mPaintsquare);
+        canvas.drawText("beacon1-R1 : " + R1, 50, 1050, mPaintsquare);
+        canvas.drawText("beacon2-R2 : " + R2, 50, 1150, mPaintsquare);
+        canvas.drawText("beacon3-R3 : " + R3, 50, 1250, mPaintsquare);
 
         //Find constant of circle #2- cirlce #1
-        //float K_a = -(R1*R1)+(c)+(x_1*x_1)-(x_2*x_2)+(y_1*y_1)-(y_2*y_2);
         float K_a = (R1 * R1) - (R2 * R2) - (x_1 * x_1) + (x_2 * x_2) - (y_1 * y_1) + (y_2 * y_2);
 
         //Find constant of circle #3- cirlce #1
-        //float K_b = -(R1*R1)+(R3*R3)+(x_1*x_1)-(x_3*x_3)+(y_1*y_1)-(y_3*y_3);
         float K_b = (R1 * R1) - (R3 * R3) - (x_1 * x_1) + (x_3 * x_3) - (y_1 * y_1) + (y_3 * y_3);
 
         //Find constants of [x=A_0+A_1*r, y=B_0+B_1*r]
@@ -345,12 +388,6 @@ public class CustomView extends View {
         float B_1 = ((R1 * (x_2 - x_3)) + (R2 * (x_3 - x_1)) + (R3 * (x_1 - x_2))) / D;
 
         //Find constants of C_0 + 2*C_1*r + C_2^2 = 0
-        /*double C_0 = Math.pow(A_0 - x_1,2)+Math.pow(B_0-y_1,2)-Math.pow(R1,2);
-        double C_1 = A_1*(A_0-x_1) + B_1*(B_0-y_1)-R1;
-        double C_2 = Math.pow(A_1,2)+ Math.pow(B_1,2) - 1;*/
-
-        //float C_0=(A_0*A_0)-2*A_0*x_1+(B_0*B_0)-2*B_0*y_1-(R1*R1)+(x_1*x_1)+(y_1*y_1);
-        //float C_1=A_0*A_1-A_1*x_1+B_0*B_1-B_1*y_1-R1;
         float C_0 = (((A_0 - x_1) * (A_0 - x_1)) + (B_0 - y_1) * (B_0 - y_1)) - (R1 * R1);
         float C_1 = (A_1 * (A_0 - x_1)) + (B_1 * (B_0 - y_1)) - R1;
         float C_2 = (A_1 * A_1) + (B_1 * B_1) - 1;
@@ -362,18 +399,148 @@ public class CustomView extends View {
         _x = A_0 + A_1 * r;
         _y = B_0 + B_1 * r;
 
-        if(_x < 0) _x *= -1;
-        if(_y < 0) _y *= -1;
+        if (_x < 0) _x *= -1;
+        if (_y < 0) _y *= -1;
 
-
-        if(_x >= 3.0f) _x = 1.5f;
-        if(_y >= 1.8f) _y = 2.67f;
         //Red dot
-        canvas.drawCircle((float) (_x) * 500, (float) (_y) * 600, 25, mPaintsquare);
+        canvas.drawCircle((float) (_x) * 685, (float) (_y) * 100, 25, mPaintsquare);
+        mPaintsquare.setColor(getResources().getColor(android.R.color.black));
+        canvas.drawText("YOU",(float)((_x) * 685) - 30,(float)((_y) * 100) + 60,mPaintsquare);
         Log.d("redDot", "---------->" + _x + "  " + _y);
 
         canvas.drawText("x : " + _x, 50, 550, mPaintsquare);
         canvas.drawText("y : " + _y, 50, 650, mPaintsquare);
+    }
+
+    private void drawPath(final Canvas canvas) {
+        mPaintsquare.reset();
+        mPaintsquare.setColor(getResources().getColor(android.R.color.holo_red_light));
+        mPaintsquare.setStrokeWidth(3);
+        mPaintsquare.setTextSize(30);
+        mPaintsquare.setStyle(Paint.Style.FILL);
+        mPaintsquare.setAntiAlias(true);
+
+        X_Start = (int) (_x * 685);
+        Y_Start = (int) (_y * 100);
+
+
+        canvas.drawText("x : " + X_Start, 50, 250, mPaintsquare);
+        canvas.drawText("y : " + Y_Start, 50, 350, mPaintsquare);
+
+
+        gameGrid = new int[getWidth()][getHeight()];
+        //create block shelf
+        for (int i = 320; i <= 858; i++) {
+            for (int j = 245; j <= 370; j++)
+                //shelf 1
+                if (i > 319 && i < 535 && j > 245 && j < 370) {
+                    gameGrid[i][j] = 1;
+                } else if (i > 664 && i < 858 && j > 245 && j < 370) { // shelf 2
+                    gameGrid[i][j] = 1;
+                }
+        }
+
+        // If stuff happens on the board (like e.g. towns are build, aliens land on some Nodes, etc)
+        // the gameGrid array will be updated. See the declaration of the GRID_VALUE_ constants above.
+        // Now we initialize the library to our rules
+
+        Pathfinder.initialize(new Settings() {
+            @Override
+            public int[][] getGrid() {
+                // If the algorithm asks for the grid, return our game grid array.
+                return gameGrid;
+            }
+
+            @Override
+            public SparseArray<Float> setTravellingCostRules() {
+                // This is where we specify our travelling cost rules.
+                // As we defined above, if a node contains aliens (-> grid at that location has value of 3)
+                // travelling should be only a third as fast as normal.
+                // Travelling on swamps should be only half as fast.
+
+                // !Note:
+                // Remember that we are initializing the COSTS, not the travelling speed.
+                // Rules of thumb: Generally, travelling half as fast means double the costs.
+
+                // !Also note:
+                // We don't put in the value of towns since we don't move slower, but not at all (they are blocked, after all).
+                SparseArray<Float> travellingCostRules = new SparseArray<>();
+
+                // The key is the grid value
+                // while the value is the factor. (For swamps this is 2, because the costs are doubled and for
+                // alien Nodes the value is 3, since the costs are tripled).
+                // By default Nodes have a travelling factor of 1, if not specified.
+                //travellingCostRules.put(GRID_VALUE_FREE, 35f);
+                return travellingCostRules;
+            }
+
+            @Override
+            public boolean isNodeBlocked(int x, int y) {
+                // Here we return true if the Node at [x, y] is blocked.
+                // In our example every Node in the area of a town is blocked,
+                // as well as every Node that is in the area of a boulder.
+                // Recap: Boulders each have their own grid value, starting at 4 and incrementing per boulder.
+                // Thus we return true if the grid value at [x, y] is 1 (town)
+                // OR bigger than or equal to 4 (boulder):
+                return gameGrid[x][y] == GRID_VALUE_SHELF || gameGrid[x][y] >= GRID_VALUE_BOULDERS_STARTING_VALUE;
+            }
+        });
+        String _shelf = MapActivity.shelfNum;
+        shelfCheck(_shelf);
+        userCheckStart(X_Start, Y_Start);
+
+        Pathfinder.findPath(X_Start, Y_Start, X_Stop, Y_Stop, new OnPathFoundListener() {
+            @Override
+            public void onPathFound(Path path) {
+                // The algorithm will return here.
+                // If a path has been found the resulting android.graphics.Path object is passed into this method.
+                // If no path is possible NULL is passed into this method.
+                if (path == null) Log.d("PATHFIND", "No Path possible!");
+                else {
+                    // ...
+                    // Awesome path stuff going on here.
+                    Log.d("PATHFIND", "----------------->" + path.isEmpty());
+                    canvas.drawCircle(X_Stop, Y_Stop, 20, mPaintsquare);
+                    mPaintsquare.setStyle(Paint.Style.STROKE);
+                    canvas.drawPath(path, mPaintsquare);
+                }
+            }
+        });
+    }
+
+    private void shelfCheck(String shelf) {
+        if (shelf.equals("1")) {
+            this.X_Stop = 422;
+            this.Y_Stop = 375;
+        } else if (shelf.equals("2")) {
+            this.X_Stop = 771;
+            this.Y_Stop = 375;
+        }
+    }
+
+    private void userCheckStart(int x, int y) {
+
+        if (x > 1018) {
+            X_Start = 1018;
+        } else if (y > 1319) {
+            Y_Start = 1319;
+        } else if (x < 20) {
+            X_Start = 20;
+        } else if (y < 20) {
+            Y_Start = 20;
+        } /*else if (x > 319 && x < 535) { //// X_Start check
+            if (x > 319) {
+                X_Start = 318;
+            } else if (x < 535) {
+                X_Start = 536;
+            }
+        } else if (y > 245 && y < 370) { //// Y_Start check
+            if (y > 245) {
+                Y_Start = 244;
+            } else if (y < 370) {
+                Y_Start = 371;
+            }
+        }*/
     }
 
     private int AverageRSSI(List<Integer> RSSI_list) {

@@ -15,10 +15,10 @@
 
             <android.support.v7.widget.CardView
                 android:id="@+id/Relative"
-                android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
                 app:cardCornerRadius="180dp"
                 app:cardElevation="5dp">
 
@@ -31,7 +31,6 @@
                     android:background="@drawable/rounded_label" />
             </android.support.v7.widget.CardView>
 
-
             <android.support.v7.widget.CardView
                 android:id="@+id/Relative1"
                 android:layout_width="match_parent"
@@ -42,258 +41,263 @@
                 app:cardCornerRadius="10dp">
 
 
+                <LinearLayout
+                    android:id="@+id/Liniear1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
                     <LinearLayout
-                        android:id="@+id/Liniear1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
-                        <LinearLayout
-                            android:orientation="horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:padding="10dp"
+                            android:text="Type:"
+                            android:textColor="@color/tomato"
+                            android:textStyle="bold" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:textStyle="bold"
-                                android:textColor="@color/tomato"
-                                android:text="Type:"
-                                android:padding="10dp"/>
-                            <TextView
-                                android:id="@+id/dialog_de_type"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/rounded_label"
-                                android:hint="Type"
-                                android:padding="10dp" />
-                        </LinearLayout>
-
-
-                        <LinearLayout
-                            android:orientation="horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:textStyle="bold"
-                                android:textColor="@color/tomato"
-                                android:text="Promotion:"
-                                android:padding="10dp"/>
-
-                            <TextView
-                                android:id="@+id/dialog_de_promo"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/rounded_label"
-                                android:hint="Promotion description"
-                                android:padding="10dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:orientation="horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:textStyle="bold"
-                                android:textColor="@color/tomato"
-                                android:text="Name:"
-                                android:padding="10dp"/>
-
-                            <TextView
-                                android:id="@+id/dialog_de_name"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/rounded_label"
-                                android:hint="Name"
-                                android:padding="10dp" />
-                        </LinearLayout>
-
-
-                        <LinearLayout
-                            android:orientation="horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:textStyle="bold"
-                                android:textColor="@color/tomato"
-                                android:text="Price:"
-                                android:padding="10dp"/>
-
-                            <TextView
-                                android:id="@+id/dialog_de_price"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/rounded_label"
-                                android:hint="Price"
-                                android:padding="10dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:orientation="horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.3"
-                                android:layout_margin="5dp"
-                                android:textStyle="bold"
-                                android:textColor="@color/tomato"
-                                android:text="Weight:"
-                                android:padding="10dp"/>
-
-                            <TextView
-                                android:id="@+id/dialog_de_weight"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/rounded_label"
-                                android:hint="Weight"
-                                android:padding="10dp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.2"
-                                android:layout_margin="5dp"
-                                android:textStyle="bold"
-                                android:textColor="@color/tomato"
-                                android:text="Kg."
-                                android:padding="10dp"/>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:orientation="horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:textStyle="bold"
-                                android:textColor="@color/tomato"
-                                android:text="Description:"
-                                android:padding="10dp"/>
-                            <TextView
-                                android:id="@+id/dialog_de_detail"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:background="@drawable/rounded_label"
-                                android:hint="Detail"
-                                android:padding="10dp" />
-                        </LinearLayout>
-
-
-                        <LinearLayout
-                            android:id="@+id/Liniear2"
+                        <TextView
+                            android:id="@+id/dialog_de_type"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:textStyle="bold"
-                                android:layout_weight="0.5"
-                                android:textColor="@color/tomato"
-                                android:text="S"
-                                android:padding="10dp"/>
-
-                            <TextView
-                                android:id="@+id/dialog_de_shelf"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_margin="5dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/rounded_label"
-                                android:hint="Shelf"
-                                android:padding="10dp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:textStyle="bold"
-                                android:layout_weight="0.5"
-                                android:textColor="@color/tomato"
-                                android:text="R"
-                                android:padding="10dp"/>
-
-                            <TextView
-                                android:id="@+id/dialog_de_row"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_margin="5dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/rounded_label"
-                                android:hint="Row"
-                                android:padding="10dp" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:textStyle="bold"
-                                android:layout_weight="0.5"
-                                android:textColor="@color/tomato"
-                                android:text="C"
-                                android:padding="10dp"/>
-
-                            <TextView
-                                android:id="@+id/dialog_de_column"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_margin="5dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/rounded_label"
-                                android:hint="Column"
-                                android:padding="10dp" />
-                        </LinearLayout>
-
-                        <Button
-                            android:id="@+id/dialog_de_find"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:background="@drawable/button_update"
-                            android:padding="5dp"
-                            android:text="Find product"
-                            android:textAllCaps="false" />
-
-                        <Button
-                            android:id="@+id/dialog_de_cancel"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:background="@drawable/button_cancel"
-                            android:padding="5dp"
-                            android:text="Back"
-                            android:textAllCaps="false" />
+                            android:layout_margin="5dp"
+                            android:background="@drawable/rounded_label"
+                            android:hint="Type"
+                            android:padding="10dp" />
                     </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:padding="10dp"
+                            android:text="Promotion:"
+                            android:textColor="@color/tomato"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/dialog_de_promo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/rounded_label"
+                            android:hint="Promotion description"
+                            android:padding="10dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:padding="10dp"
+                            android:text="Name:"
+                            android:textColor="@color/tomato"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/dialog_de_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/rounded_label"
+                            android:hint="Name"
+                            android:padding="10dp" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:padding="10dp"
+                            android:text="Price:"
+                            android:textColor="@color/tomato"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/dialog_de_price"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/rounded_label"
+                            android:hint="Price"
+                            android:padding="10dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:layout_weight="0.3"
+                            android:padding="10dp"
+                            android:text="Weight:"
+                            android:textColor="@color/tomato"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/dialog_de_weight"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_label"
+                            android:hint="Weight"
+                            android:padding="10dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:layout_weight="0.2"
+                            android:padding="10dp"
+                            android:text="Kg."
+                            android:textColor="@color/tomato"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:padding="10dp"
+                            android:text="Description:"
+                            android:textColor="@color/tomato"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/dialog_de_detail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/rounded_label"
+                            android:hint="Detail"
+                            android:padding="10dp" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/Liniear2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:layout_weight="0.5"
+                            android:padding="10dp"
+                            android:text="S"
+                            android:textColor="@color/tomato"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/dialog_de_shelf"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_label"
+                            android:hint="Shelf"
+                            android:padding="10dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:layout_weight="0.5"
+                            android:padding="10dp"
+                            android:text="R"
+                            android:textColor="@color/tomato"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/dialog_de_row"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_label"
+                            android:hint="Row"
+                            android:padding="10dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:layout_weight="0.5"
+                            android:padding="10dp"
+                            android:text="C"
+                            android:textColor="@color/tomato"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/dialog_de_column"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_label"
+                            android:hint="Column"
+                            android:padding="10dp" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/dialog_de_find"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/button_update"
+                        android:padding="5dp"
+                        android:text="Find product"
+                        android:textAllCaps="false" />
+
+                    <Button
+                        android:id="@+id/dialog_de_cancel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/button_cancel"
+                        android:padding="5dp"
+                        android:text="Back"
+                        android:textAllCaps="false" />
+                </LinearLayout>
             </android.support.v7.widget.CardView>
         </RelativeLayout>
     </RelativeLayout>
