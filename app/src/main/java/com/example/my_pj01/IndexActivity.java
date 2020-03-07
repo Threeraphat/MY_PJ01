@@ -9,15 +9,12 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Parcel;
-import android.os.ParcelUuid;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
@@ -38,7 +35,6 @@ import java.util.List;
 import static com.example.my_pj01.App.channel;
 
 public class IndexActivity extends AppCompatActivity {
-
     public static final int REQUEST_ENABLE_BT = 1;
     public static HashMap<String, BTLE_Device> mBTDevicesHashMap;
     private BroadcastReceiver_BTState mBTStateUpdateReceiver;
@@ -53,8 +49,10 @@ public class IndexActivity extends AppCompatActivity {
     Animation upToDown, downToUp;
     List<PromotionModel> promotionModels = new ArrayList<>();
     PromotionModel promotionModel;
+    BTLE_Device btle_device;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("products");
+    DatabaseReference beacons = FirebaseDatabase.getInstance().getReference("beacons");
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -65,8 +63,6 @@ public class IndexActivity extends AppCompatActivity {
         Utils.FullScreen(this);
         Utils.CheckOpenLocation(this);
 
-        // Use this check to determine whether BLE is supported on the device. Then
-        // you can selectively disable BLE-related features.
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Utils.toast(getApplicationContext(), "BLE not supported");
             finish();
@@ -152,7 +148,6 @@ public class IndexActivity extends AppCompatActivity {
         if (requestCode == REQUEST_ENABLE_BT) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-
                 //Utils.toast(getApplicationContext(), "Thank you for turning on Bluetooth");
             } else if (resultCode == RESULT_CANCELED) {
                 Utils.toast(getApplicationContext(), "Please turn on Bluetooth");
@@ -179,17 +174,40 @@ public class IndexActivity extends AppCompatActivity {
 
         String name = device.getName();
         String address = device.getAddress();
+        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+
         if (address == null) return;
         if (!address.equals(addr_b1) && !address.equals(addr_b2) && !address.equals(addr_b3))
             return;
 
         if (!mBTDevicesHashMap.containsKey(address)) {
-            BTLE_Device btleDevice = new BTLE_Device(device);
-            btleDevice.setRSSI(rssi);
+            btle_device = new BTLE_Device(device);
+            btle_device.setRSSI(rssi);
 
-            mBTDevicesHashMap.put(name, btleDevice);
-            mBTDevicesHashMap.put(address, btleDevice);
-            Log.d("TEST_BLE", "--------->" + btleDevice.getName() + "  RSSI-->" + btleDevice.getRSSI());
+            mBTDevicesHashMap.put(name, btle_device);
+            mBTDevicesHashMap.put(address, btle_device);
+
+            if(address.equals(addr_b1)){
+                DatabaseReference child = beacons.child("beacon1");
+                child.child("uuid").setValue(address).toString();
+                child.child("namespace").setValue(name).toString();
+                child.child("instance").setValue(name + address).toString();
+                child.child("rssi").setValue(rssi).toString();
+            }
+            else if(address.equals(addr_b2)) {
+                DatabaseReference child = beacons.child("beacon2");
+                child.child("uuid").setValue(address).toString();
+                child.child("namespace").setValue(name).toString();
+                child.child("instance").setValue(name + address).toString();
+                child.child("rssi").setValue(rssi).toString();
+            }
+            else if(address.equals(addr_b3)){
+                DatabaseReference child = beacons.child("beacon3");
+                child.child("uuid").setValue(address).toString();
+                child.child("namespace").setValue(name).toString();
+                child.child("instance").setValue(name + address).toString();
+                child.child("rssi").setValue(rssi).toString();
+            }
         } else {
             mBTDevicesHashMap.get(name).setName(name);
             mBTDevicesHashMap.get(address).setRSSI(rssi);
@@ -225,7 +243,6 @@ public class IndexActivity extends AppCompatActivity {
                         @Override
                         public void onCancelled(DatabaseError error) {
                             // Failed to read value
-
                         }
                         //NotificationService.addNotification(this,"test","test");
                     });
@@ -234,8 +251,24 @@ public class IndexActivity extends AppCompatActivity {
             } else {
                 isState = true;
             }
-
         }
+        beacons.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    btle_device = new BTLE_Device();
+                    btle_device.setAddres(ds.child("uuid").getValue().toString());
+                    btle_device.setName(ds.child("namespace").getValue().toString());
+                    btle_device.setAddres(ds.child("instance").getValue().toString());
+                    btle_device.setText_rssi(ds.child("rssi").getValue().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

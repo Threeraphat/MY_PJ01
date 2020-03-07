@@ -4,13 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg2"
+    android:background="@drawable/bg_main1"
     tools:context=".MainActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/re_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/re_list"
+            android:layout_width="match_parent"
+            android:background="@drawable/rounded_label"
+            android:layout_height="match_parent"
+            android:layout_marginTop="65dp"
+            android:layout_marginBottom="120dp">
 
-    </android.support.v7.widget.RecyclerView>
+        </android.support.v7.widget.RecyclerView>
 </RelativeLayout>

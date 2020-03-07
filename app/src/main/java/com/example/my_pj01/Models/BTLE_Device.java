@@ -9,18 +9,33 @@ public class BTLE_Device {
 
     private BluetoothDevice bluetoothDevice;
     private int rssi;
-    private String namespace, uuid;
+    private String text_rssi;
+    private String namespace, uuid, addres;
 
     public BTLE_Device(BluetoothDevice bluetoothDevice) {
         this.bluetoothDevice = bluetoothDevice;
     }
 
+    public BTLE_Device(){
+    }
     public String getAddress() {
-        return bluetoothDevice.getAddress();
+        return addres;
+    }
+
+    public void setAddres(String addr){
+        this.addres = addr;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getName() {
         return namespace;
+    }
+
+    public void setText_rssi(String text_rssi) {
+        this.text_rssi = text_rssi;
     }
 
     public void setName(String name) {

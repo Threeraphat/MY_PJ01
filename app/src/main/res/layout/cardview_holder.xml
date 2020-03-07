@@ -18,11 +18,11 @@
 
         <ImageView
             android:id="@+id/card_Image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="125dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:background="@drawable/rounded_label"
-            android:layout_margin="5dp"/>
+            android:layout_marginRight="5dp"
+            android:background="@drawable/rounded_label" />
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"

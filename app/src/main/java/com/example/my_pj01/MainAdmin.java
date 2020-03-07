@@ -28,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.my_pj01.Models.BTLE_Device;
 import com.example.my_pj01.Models.ProductModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -62,12 +63,12 @@ public class MainAdmin extends AppCompatActivity {
     List<ProductModel> productModels = new ArrayList<>();
     ProductModel productModel;
     DatabaseReference ref = FirebaseDatabase.getInstance().getReference("products");
-    private ImageView m_img, add_p;
+    private ImageView m_img;
     private EditText m_type, m_name, m_price, m_weight, m_detail, m_shelf, m_row, m_column;
     private Button m_update, m_remove, m_back;
     private StorageReference storageReference;
     private File file;
-    String getType = "", m_promo;
+    String getType = "";
     Spinner aSpinner;
 
     @Override
@@ -82,7 +83,6 @@ public class MainAdmin extends AppCompatActivity {
     private void init() {
         Intent intent = getIntent();
         getType = intent.getStringExtra("type");
-        //System.out.println("getType from TypeActivity---> " + getType);
         dataRecyclerView = findViewById(R.id.re_list_admin);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("products");
@@ -173,7 +173,6 @@ public class MainAdmin extends AppCompatActivity {
                                     productModel.setType(m_type.getText().toString());
                                     productModel.setWeight(m_weight.getText().toString());
                                     productModel.setPromotion(aSpinner.getSelectedItem().toString());
-//                                    productModels.set(position,productModel);
                                     ref.child(productModels.get(position).getKey()).setValue(productModel);
                                     if (dialog.isShowing()) {
                                         dialog.dismiss();

@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
     private void init() {
         Intent intent = getIntent();
         getType = intent.getStringExtra("type");
-        //System.out.println("getType from TypeActivity---> " + getType);
         dataRecyclerView = findViewById(R.id.re_list);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("products");

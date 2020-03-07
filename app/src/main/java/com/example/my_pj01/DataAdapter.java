@@ -43,7 +43,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> im
 
     @Override
     public void onBindViewHolder(@NonNull final DataAdapter.ViewHolder holder, int position) {
-        //System.out.println("log_test column" + productObjects.get(position).getColumn());
         holder.c_name.setText(productObjects.get(position).getName());
         holder.c_promo.setText(productObjects.get(position).getPromotion());
         holder.c_price.setText(productObjects.get(position).getPrice().concat(" THB."));
@@ -135,7 +134,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> im
             }
             FilterResults results = new FilterResults();
             results.values = filteredList;
-
             return results;
         }
 

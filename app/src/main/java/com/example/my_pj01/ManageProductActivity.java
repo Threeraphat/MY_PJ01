@@ -5,8 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +20,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.my_pj01.Models.BTLE_Device;
+import com.example.my_pj01.Models.ProductModel;
+import com.example.my_pj01.Models.PromotionModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +36,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class ManageProductActivity extends AppCompatActivity {
@@ -43,7 +50,7 @@ public class ManageProductActivity extends AppCompatActivity {
     TextView clickHere;
     String name, price, type, description, row, column, shelf, weight, promo;
     int id;
-    EditText edtname, edtprice, edttype,edtweight , edtdescription, edtrow, edtcolumn, edtshelf;
+    EditText edtname, edtprice, edttype, edtweight, edtdescription, edtrow, edtcolumn, edtshelf;
     DatabaseReference ref = FirebaseDatabase.getInstance().getReference("products");
     DatabaseReference run_no = FirebaseDatabase.getInstance().getReference("running");
 
@@ -66,13 +73,13 @@ public class ManageProductActivity extends AppCompatActivity {
         edtcolumn = findViewById(R.id.in_column);
         edtshelf = findViewById(R.id.in_shelf);
 
-        storageReference = FirebaseStorage.getInstance().getReference("Product_Images/"+ UUID.randomUUID().toString());
+        storageReference = FirebaseStorage.getInstance().getReference("Product_Images/" + UUID.randomUUID().toString());
         run_no.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     id = dataSnapshot.getValue(Integer.class);
-                }else{
+                } else {
                     id = 0;
                 }
             }
@@ -92,6 +99,8 @@ public class ManageProductActivity extends AppCompatActivity {
             }
         });
 
+
+
         findViewById(R.id.update).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,19 +114,19 @@ public class ManageProductActivity extends AppCompatActivity {
                 shelf = edtshelf.getText().toString();
                 promo = aSpinner.getSelectedItem().toString();
 
-                if(imageView.getDrawable() == null){
+                if (imageView.getDrawable() == null) {
                     Toast.makeText(ManageProductActivity.this, "Please select image", Toast.LENGTH_SHORT).show();
-                }else if(name.equals("") || price.equals("") || type.equals("") || description.equals("") || weight.equals("") || row.equals("") || column.equals("") || shelf.equals("") || promo.equals("")){
+                } else if (name.equals("") || price.equals("") || type.equals("") || description.equals("") || weight.equals("") || row.equals("") || column.equals("") || shelf.equals("") || promo.equals("")) {
                     Toast.makeText(ManageProductActivity.this, "Please enter data all field", Toast.LENGTH_SHORT).show();
-                }else{
-                    if(path != null){
+                } else {
+                    if (path != null) {
                         final ProgressDialog dialog = new ProgressDialog(ManageProductActivity.this);
                         dialog.setTitle("Uploading...");
                         dialog.show();
                         storageReference.putFile(path).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                DatabaseReference child = ref.child("Product"+String.format("%010d",id));
+                                DatabaseReference child = ref.child("Product" + String.format("%010d", id));
                                 child.child("id").setValue(id);
                                 child.child("name").setValue(name);
                                 child.child("price").setValue(price);
@@ -129,7 +138,7 @@ public class ManageProductActivity extends AppCompatActivity {
                                 child.child("picture").setValue(storageReference.getPath());
                                 child.child("shelf").setValue(shelf);
                                 child.child("promotion").setValue(promo);
-                                run_no.setValue(id+1);
+                                run_no.setValue(id + 1);
                                 Toast.makeText(ManageProductActivity.this, "Upload Success.", Toast.LENGTH_SHORT).show();
 
                                 if (!ManageProductActivity.this.isFinishing()) {
@@ -147,7 +156,7 @@ public class ManageProductActivity extends AppCompatActivity {
                             @Override
                             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                                 dialog.setMessage("Uploading "
-                                        + (int)(100.0*taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount()) + "%");
+                                        + (int) (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount()) + "%");
                             }
                         });
                     }
@@ -161,7 +170,7 @@ public class ManageProductActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select image"),PICK_IMAGE_REQUEST);
+                startActivityForResult(Intent.createChooser(intent, "Select image"), PICK_IMAGE_REQUEST);
             }
         });
     }
@@ -169,19 +178,19 @@ public class ManageProductActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PICK_IMAGE_REQUEST
+        if (requestCode == PICK_IMAGE_REQUEST
                 && resultCode == Activity.RESULT_OK
-                && data!=null
-                && data.getData() != null){
+                && data != null
+                && data.getData() != null) {
             path = data.getData();
-            try{
+            try {
                 bitmap = MediaStore
                         .Images
                         .Media
-                        .getBitmap(getContentResolver(),path);
+                        .getBitmap(getContentResolver(), path);
                 imageView.setImageBitmap(bitmap);
                 clickHere.setVisibility(View.GONE);
-            }catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

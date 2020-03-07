@@ -54,39 +54,10 @@ public class Scanner_BTLE {
         scanLeDevice(false);
     }
 
-    // If you want to scan for only specific types of peripherals,
-    // you can instead call startLeScan(UUID[], BluetoothAdapter.LeScanCallback),
-    // providing an array of UUID objects that specify the GATT services your app supports.
-
     private void scanLeDevice(final boolean enable) {
         Log.d("Scanner", String.valueOf(mScanning));
-//        if (enable && !mScanning) {
-        //Utils.toast(ma.getApplicationContext(), "Starting BLE scan...");
-
-        // Stops scanning after a pre-defined scan period.
-//            mHandler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    Utils.toast(ma.getApplicationContext(), "Stopping BLE scan...");
-//
-//                    mScanning = false;
-//                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
-//
-//
-//                    ma.stopScan();
-//                }
-//            }, scanPeriod);
-
         mScanning = true;
         mBluetoothAdapter.startLeScan(mLeScanCallback);
-
-        //mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
-//        } else {
-//            mScanning = false;
-//
-//                mBluetoothAdapter.stopLeScan(mLeScanCallback);
-//
-//        }
     }
 
     // Device scan callback.

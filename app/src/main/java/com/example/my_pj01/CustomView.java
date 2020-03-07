@@ -422,9 +422,6 @@ public class CustomView extends View {
         Pathfinder.findPath(X_Start, Y_Start, X_Stop, Y_Stop, new OnPathFoundListener() {
             @Override
             public void onPathFound(Path path) {
-                // The algorithm will return here.
-                // If a path has been found the resulting android.graphics.Path object is passed into this method.
-                // If no path is possible NULL is passed into this method.
                 if (path == null) Log.d("PATHFIND", "No Path possible!");
                 else {
                     canvas.drawCircle(X_Stop, Y_Stop, 20, mPaintsquare);
