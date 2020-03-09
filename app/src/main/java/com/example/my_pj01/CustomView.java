@@ -19,6 +19,7 @@ import com.ichbingrumpig.pathfinder.Settings;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -164,6 +165,8 @@ public class CustomView extends View {
 
     private void ReceiveBeacon() {
         Set set = IndexActivity.mBTDevicesHashMap.entrySet();
+
+        if(set == null) return;
         // Get an iterator
         Iterator i = set.iterator();
 
@@ -443,22 +446,24 @@ public class CustomView extends View {
     }
 
     private void userCheckStart(int x, int y) {
+        x = 0;
+        y = 0;
         if (x > 1018 || y > 1319) {
             if (x > 1018) X_Start = 1018;
-            else if (y > 1319) Y_Start = 1319;
-        } else if (x < 20 || y < 20) {
+            if (y > 1319) Y_Start = 1319;
+        } if (x < 20 || y < 20) {
             if (x < 20) X_Start = 20;
-            else if (y < 20) Y_Start = 20;
-        } else if (x > 310 && x < 540 && y > 240 && y < 375) { //// shelf 1 check
+            if (y < 20) Y_Start = 20;
+        } if (x > 310 && x < 540 && y > 240 && y < 375) { //// shelf 1 check
             if (x > 310 && x < 205) X_Start = 310;
-            else if (y > 240 && y < 308) Y_Start = 240;
-            else if (x > 204 && x < 540) X_Start = 540;
-            else if (y > 307 && y < 375) Y_Start = 375;
-        } else if (x > 660 && x < 860 && y > 240 && y < 375) { //// shelf 2 check
+            if (y > 240 && y < 308) Y_Start = 240;
+            if (x > 204 && x < 540) X_Start = 540;
+            if (y > 307 && y < 375) Y_Start = 375;
+        } if (x > 660 && x < 860 && y > 240 && y < 375) { //// shelf 2 check
             if (x > 660 && x < 759) X_Start = 660;
-            else if (y > 240 && y < 308) Y_Start = 240;
-            else if (x > 758 && x < 860) X_Start = 860;
-            else if (y > 307 && y < 375) Y_Start = 375;
+            if (y > 240 && y < 308) Y_Start = 240;
+            if (x > 758 && x < 860) X_Start = 860;
+            if (y > 307 && y < 375) Y_Start = 375;
         }
     }
 

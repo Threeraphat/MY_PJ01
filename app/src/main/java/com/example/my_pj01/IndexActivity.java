@@ -117,7 +117,6 @@ public class IndexActivity extends AppCompatActivity {
     protected void onResume() {
         //Utils.toast(this, "Resume BLE scan...");
         super.onResume();
-
     }
 
     @Override
@@ -174,7 +173,7 @@ public class IndexActivity extends AppCompatActivity {
 
         String name = device.getName();
         String address = device.getAddress();
-        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        //BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 
         if (address == null) return;
         if (!address.equals(addr_b1) && !address.equals(addr_b2) && !address.equals(addr_b3))
@@ -280,7 +279,6 @@ public class IndexActivity extends AppCompatActivity {
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(message))
                 .setColor(Color.GREEN)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setGroup(title)
                 .setGroupSummary(true)
                 .setAutoCancel(true)
