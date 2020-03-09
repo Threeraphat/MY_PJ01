@@ -12,8 +12,8 @@
     <application
         android:name=".App"
         android:allowBackup="true"
-        android:label="Indoor Preference-Matching Systems"
         android:icon="@mipmap/ic_launcher"
+        android:label="Indoor Preference-Matching Systems"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -22,21 +22,25 @@
             android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MapActivity" android:launchMode="singleTop"
+            android:name=".MapActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".TypeAdminActivity" android:launchMode="singleTop"
-            android:screenOrientation="locked"
-            android:label="Product Type" />
+            android:name=".TypeAdminActivity"
+            android:label="Product Type"
+            android:launchMode="singleTop"
+            android:screenOrientation="locked" />
         <activity
-            android:name=".TypeActivity" android:launchMode="singleTop"
-            android:screenOrientation="locked"
-            android:label="Product Type" />
+            android:name=".TypeActivity"
+            android:label="Product Type"
+            android:launchMode="singleTop"
+            android:screenOrientation="locked" />
         <activity
-            android:name=".MainAdmin" android:launchMode="singleTop"
-            android:screenOrientation="locked"
-            android:label="Products" />
+            android:name=".MainAdmin"
+            android:label="Products"
+            android:launchMode="singleTop"
+            android:screenOrientation="locked" />
         <activity
             android:name=".LoginAdmin"
             android:screenOrientation="locked"
@@ -53,13 +57,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ManageProductActivity" android:launchMode="singleTop"
-            android:screenOrientation="locked"
-            android:configChanges="keyboard|orientation|screenSize" />
+            android:name=".ManageProductActivity"
+            android:configChanges="keyboard|orientation|screenSize"
+            android:launchMode="singleTop"
+            android:screenOrientation="locked" />
         <activity
-            android:name=".MainActivity" android:launchMode="singleTop"
-            android:screenOrientation="locked"
-            android:label="Products" />
+            android:name=".MainActivity"
+            android:label="Products"
+            android:launchMode="singleTop"
+            android:screenOrientation="locked" />
     </application>
 
 </manifest>

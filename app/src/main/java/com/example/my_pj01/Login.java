@@ -21,7 +21,6 @@ public class Login extends AppCompatActivity {
 
     public static Activity login;
     BTLE_Device btle_device;
-    boolean isState = false;
     final private String addr_b1 = "30:AE:A4:F4:87:32";
     final private String addr_b2 = "24:6F:28:9D:6E:AE";
     final private String addr_b3 = "A4:CF:12:75:0A:6A";

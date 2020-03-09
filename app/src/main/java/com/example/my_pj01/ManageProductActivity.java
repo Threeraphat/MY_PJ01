@@ -48,9 +48,10 @@ public class ManageProductActivity extends AppCompatActivity {
     Bitmap bitmap;
     RelativeLayout relativeLayout;
     TextView clickHere;
+    String nopromo = "no promotion";
     String name, price, type, description, row, column, shelf, weight, promo;
     int id;
-    EditText edtname, edtprice, edttype, edtweight, edtdescription, edtrow, edtcolumn, edtshelf;
+    EditText edtname, edtprice, edttype, edtweight, edtdescription, edtrow, edtcolumn, edtshelf, edtpromo;
     DatabaseReference ref = FirebaseDatabase.getInstance().getReference("products");
     DatabaseReference run_no = FirebaseDatabase.getInstance().getReference("running");
 
@@ -59,7 +60,6 @@ public class ManageProductActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_product);
         Utils.FullScreen(this);
-        final Spinner aSpinner = findViewById(R.id.in_promo);
 
         relativeLayout = findViewById(R.id.Relative);
         clickHere = findViewById(R.id.clickHere);
@@ -72,6 +72,7 @@ public class ManageProductActivity extends AppCompatActivity {
         edtrow = findViewById(R.id.in_row);
         edtcolumn = findViewById(R.id.in_column);
         edtshelf = findViewById(R.id.in_shelf);
+        edtpromo = findViewById(R.id.in_promo);
 
         storageReference = FirebaseStorage.getInstance().getReference("Product_Images/" + UUID.randomUUID().toString());
         run_no.addValueEventListener(new ValueEventListener() {
@@ -99,8 +100,6 @@ public class ManageProductActivity extends AppCompatActivity {
             }
         });
 
-
-
         findViewById(R.id.update).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,11 +111,13 @@ public class ManageProductActivity extends AppCompatActivity {
                 row = edtrow.getText().toString();
                 column = edtcolumn.getText().toString();
                 shelf = edtshelf.getText().toString();
-                promo = aSpinner.getSelectedItem().toString();
+                promo = edtpromo.getText().toString();
 
                 if (imageView.getDrawable() == null) {
                     Toast.makeText(ManageProductActivity.this, "Please select image", Toast.LENGTH_SHORT).show();
-                } else if (name.equals("") || price.equals("") || type.equals("") || description.equals("") || weight.equals("") || row.equals("") || column.equals("") || shelf.equals("") || promo.equals("")) {
+                } if(promo.equals("")) {
+                    promo = nopromo;
+                } if (name.equals("") || price.equals("") || type.equals("") || description.equals("") || weight.equals("") || row.equals("") || column.equals("") || shelf.equals("")) {
                     Toast.makeText(ManageProductActivity.this, "Please enter data all field", Toast.LENGTH_SHORT).show();
                 } else {
                     if (path != null) {

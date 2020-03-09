@@ -126,14 +126,14 @@
                     android:padding="10dp"
                     android:hint="Column"/>
             </LinearLayout>
-            <Spinner
+            <EditText
                 android:id="@+id/in_promo"
+                android:hint="No Promotion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rounded_label"
                 android:layout_margin="5dp"
-                android:padding="10dp"
-                android:entries="@array/Spinner_items" />
+                android:background="@drawable/rounded_label"
+                android:padding="10dp" />
         </LinearLayout>
     </RelativeLayout>
     <LinearLayout

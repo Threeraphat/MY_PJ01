@@ -64,12 +64,11 @@ public class MainAdmin extends AppCompatActivity {
     ProductModel productModel;
     DatabaseReference ref = FirebaseDatabase.getInstance().getReference("products");
     private ImageView m_img;
-    private EditText m_type, m_name, m_price, m_weight, m_detail, m_shelf, m_row, m_column;
+    private EditText m_type, m_name, m_price, m_weight, m_detail, m_shelf, m_row, m_column, m_promo;
     private Button m_update, m_remove, m_back;
     private StorageReference storageReference;
     private File file;
     String getType = "";
-    Spinner aSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +127,7 @@ public class MainAdmin extends AppCompatActivity {
                         m_shelf.setText(productModels.get(position).getShelf());
                         m_row.setText(productModels.get(position).getRow());
                         m_column.setText(productModels.get(position).getColumn());
+                        m_promo.setText(productModels.get(position).getPromotion());
 
                         clickHere.setVisibility(View.GONE);
 
@@ -172,7 +172,7 @@ public class MainAdmin extends AppCompatActivity {
                                     productModel.setShelf(m_shelf.getText().toString());
                                     productModel.setType(m_type.getText().toString());
                                     productModel.setWeight(m_weight.getText().toString());
-                                    productModel.setPromotion(aSpinner.getSelectedItem().toString());
+                                    productModel.setPromotion(m_promo.getText().toString());
                                     ref.child(productModels.get(position).getKey()).setValue(productModel);
                                     if (dialog.isShowing()) {
                                         dialog.dismiss();
@@ -244,7 +244,7 @@ public class MainAdmin extends AppCompatActivity {
                 productModel.setShelf(m_shelf.getText().toString());
                 productModel.setType(m_type.getText().toString());
                 productModel.setWeight(m_weight.getText().toString());
-                productModel.setPromotion(aSpinner.getSelectedItem().toString());
+                productModel.setPromotion(m_promo.getText().toString());
                 ref.child(productModels.get(position).getKey()).setValue(productModel);
                 if (dialog.isShowing()) {
                     dialog.dismiss();
@@ -284,7 +284,7 @@ public class MainAdmin extends AppCompatActivity {
             dialog.setCancelable(false);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         }
-        aSpinner = dialog.findViewById(R.id.dialog_m_promo);
+        m_promo = dialog.findViewById(R.id.dialog_m_promo);
         m_img = dialog.findViewById(R.id.dialog_m_img);
         m_type = dialog.findViewById(R.id.dialog_m_type);
         m_name = dialog.findViewById(R.id.dialog_m_name);
@@ -365,6 +365,18 @@ public class MainAdmin extends AppCompatActivity {
                 return false;
             }
         });
+
+        /*MenuItem addPromotion = menu.findItem(R.id.action_add_promotion);
+        addProduct.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if(!MainAdmin.this.isFinishing()) {
+                    startActivity(new Intent(getApplicationContext(), ManageProductActivity.class));
+                    finish();
+                }
+                return false;
+            }
+        });*/
         return super.onCreateOptionsMenu(menu);
     }
 }

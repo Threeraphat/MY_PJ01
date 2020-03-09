@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_centerVertical="true">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        app:cardCornerRadius="10dp"
+        android:elevation="5dp">
+
+        <RelativeLayout
+            android:id="@+id/Relative1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp">
+
+            <TextView
+                android:id="@+id/tv_promo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Promotion"
+                android:layout_marginTop="20dp"
+                android:textColor="@android:color/black"
+                android:textSize="24sp" />
+            <EditText
+                android:id="@+id/dialog_manage_promotion"
+                android:layout_below="@+id/tv_promo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_label"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:hint="Insert Promotion."
+                android:padding="10dp"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:id="@+id/Liniear1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dialog_manage_promotion"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/dialog_m_update"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/dialog_manage_promotion"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_update"
+                    android:padding="5dp"
+                    android:text="Update"
+                    android:textAllCaps="false" />
+
+                <Button
+                    android:id="@+id/dialog_m_delete"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/button_cancel"
+                    android:padding="5dp"
+                    android:text="Remove"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/Liniear2"
+                android:layout_below="@id/Liniear1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/dialog_m_cancel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:background="@drawable/button_back"
+                    android:padding="5dp"
+                    android:text="Back"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

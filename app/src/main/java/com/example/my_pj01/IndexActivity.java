@@ -219,11 +219,11 @@ public class IndexActivity extends AppCompatActivity {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                 promotionModel = new PromotionModel();
-                                promotionModel.setPromotion(ds.child("promotion").getValue().toString());
+                                promotionModel.setPromotion(ds.child("promotion").getValue().toString().toLowerCase());
                                 if (promotionModels.size() > 0) {
                                     checkDuplicationPromotion(promotionModels, promotionModel);
                                 }
-                                if (!promotionModel.getPromotion().equals("No promotion")) {
+                                if (!promotionModel.getPromotion().equals("no promotion")) {
                                     promotionModels.add(promotionModel);
                                 }
                             }
@@ -282,7 +282,7 @@ public class IndexActivity extends AppCompatActivity {
                 .setGroup(title)
                 .setGroupSummary(true)
                 .setAutoCancel(true)
-                .setOnlyAlertOnce(true)
+                .setOnlyAlertOnce(false)
                 .build();
 
         notificationManager.notify(1, notification);

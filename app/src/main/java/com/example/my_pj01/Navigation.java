@@ -19,16 +19,12 @@ import com.ichbingrumpig.pathfinder.Settings;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.example.my_pj01.MapActivity.real_path;
-
-
-public class CustomView extends View {
+public class Navigation extends View {
     private int numColumns, numRows;
     private int cellWidth, cellHeight;
     private Paint blackPaint = new Paint();
@@ -76,23 +72,23 @@ public class CustomView extends View {
     double _x = 0, _y = 0;
     double r = 0;
 
-    public CustomView(Context context) {
+    public Navigation(Context context) {
         super(context);
         init(null);
     }
 
-    public CustomView(Context context, @Nullable AttributeSet attrs) {
+    public Navigation(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         init(attrs);
     }
 
-    public CustomView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public Navigation(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(attrs);
     }
 
-    public CustomView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public Navigation(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(attrs);
     }
@@ -390,8 +386,7 @@ public class CustomView extends View {
         //create block shelf
         for (int i = 320; i <= 858; i++) {
             for (int j = 245; j <= 370; j++)
-                //shelf 1
-                if (i > 319 && i < 535 && j > 245 && j < 370) {
+                if (i > 319 && i < 535 && j > 245 && j < 370) { // shelf 1
                     gameGrid[i][j] = 1;
                 } else if (i > 664 && i < 858 && j > 245 && j < 370) { // shelf 2
                     gameGrid[i][j] = 1;
@@ -438,32 +433,30 @@ public class CustomView extends View {
     private void shelfCheck(String shelf) {
         if (shelf.equals("1")) {
             this.X_Stop = 422;
-            this.Y_Stop = 375;
+            this.Y_Stop = 385;
         } else if (shelf.equals("2")) {
             this.X_Stop = 771;
-            this.Y_Stop = 375;
+            this.Y_Stop = 385;
         }
     }
 
     private void userCheckStart(int x, int y) {
-        x = 0;
-        y = 0;
         if (x > 1018 || y > 1319) {
             if (x > 1018) X_Start = 1018;
             if (y > 1319) Y_Start = 1319;
         } if (x < 20 || y < 20) {
             if (x < 20) X_Start = 20;
             if (y < 20) Y_Start = 20;
-        } if (x > 310 && x < 540 && y > 240 && y < 375) { //// shelf 1 check
+        } if (x > 310 && x < 540 && y > 240 && y < 385) { //// shelf 1 check
             if (x > 310 && x < 205) X_Start = 310;
             if (y > 240 && y < 308) Y_Start = 240;
             if (x > 204 && x < 540) X_Start = 540;
-            if (y > 307 && y < 375) Y_Start = 375;
-        } if (x > 660 && x < 860 && y > 240 && y < 375) { //// shelf 2 check
+            if (y > 307 && y < 385) Y_Start = 385;
+        } if (x > 660 && x < 860 && y > 240 && y < 385) { //// shelf 2 check
             if (x > 660 && x < 759) X_Start = 660;
             if (y > 240 && y < 308) Y_Start = 240;
             if (x > 758 && x < 860) X_Start = 860;
-            if (y > 307 && y < 375) Y_Start = 375;
+            if (y > 307 && y < 385) Y_Start = 385;
         }
     }
 
