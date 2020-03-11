@@ -18,14 +18,15 @@
 
         <ImageView
             android:id="@+id/card_Image"
-            android:layout_width="125dp"
-            android:layout_height="match_parent"
+            android:layout_width="150dp"
+            android:layout_height="140dp"
             android:layout_gravity="center"
             android:layout_marginRight="5dp"
             android:background="@drawable/rounded_label" />
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
+            android:layout_gravity="center"
             android:layout_height="wrap_content">
             <LinearLayout
                 android:layout_width="match_parent"

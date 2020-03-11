@@ -1,7 +1,7 @@
 package com.example.my_pj01.Models;
 
 public class ProductModel extends PromotionModel {
-    private int id;
+    private int prodid;
     private String name, price, type, description, picture, row, column, shelf, weight ,key;
 
     public ProductModel() {
@@ -16,12 +16,12 @@ public class ProductModel extends PromotionModel {
         this.weight = weight;
     }
 
-    public int getId() {
-        return id;
+    public int getProdid() {
+        return prodid;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setProdid(int prodid) {
+        this.prodid = prodid;
     }
 
     public String getName() {

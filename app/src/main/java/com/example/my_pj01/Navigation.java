@@ -12,7 +12,7 @@ import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.my_pj01.Models.BTLE_Device;
+import com.example.my_pj01.Models.BeaconModel;
 import com.ichbingrumpig.pathfinder.OnPathFoundListener;
 import com.ichbingrumpig.pathfinder.Pathfinder;
 import com.ichbingrumpig.pathfinder.Settings;
@@ -170,7 +170,7 @@ public class Navigation extends View {
         while (i.hasNext()) {
             Map.Entry me = (Map.Entry) i.next();
             if (me.getKey().equals("Beacon_1")) {
-                rssi1 = ((BTLE_Device) me.getValue()).getRSSI();
+                rssi1 = ((BeaconModel) me.getValue()).getRSSI();
                 RSSIAverage_1.addAll(Collections.singleton(rssi1));
                 if (RSSIAverage_1.size() > 3) {
                     R1_sum = AverageRSSI(RSSIAverage_1); //R1_avg
@@ -179,7 +179,7 @@ public class Navigation extends View {
                     RSSIAverage_1.clear();
                 }
             } else if (me.getKey().equals("Beacon_2")) {
-                rssi2 = ((BTLE_Device) me.getValue()).getRSSI();
+                rssi2 = ((BeaconModel) me.getValue()).getRSSI();
                 RSSIAverage_2.addAll(Collections.singleton(rssi2));
                 if (RSSIAverage_2.size() > 3) {
                     R2_sum = AverageRSSI(RSSIAverage_2);
@@ -188,7 +188,7 @@ public class Navigation extends View {
                     RSSIAverage_2.clear();
                 }
             } else if (me.getKey().equals("Beacon_3")) {
-                rssi3 = ((BTLE_Device) me.getValue()).getRSSI();
+                rssi3 = ((BeaconModel) me.getValue()).getRSSI();
                 RSSIAverage_3.addAll(Collections.singleton(rssi3));
                 if (RSSIAverage_3.size() > 3) {
                     R3_sum = AverageRSSI(RSSIAverage_3);
@@ -330,11 +330,11 @@ public class Navigation extends View {
         mPaintsquare.setStyle(Paint.Style.FILL);
         mPaintsquare.setAntiAlias(true);
 
-        canvas.drawText("MapScale_Width : " + getWidth(), 50, 850, mPaintsquare);
-        canvas.drawText("MapScale_Height  : " + getHeight(), 50, 950, mPaintsquare);
-        canvas.drawText("beacon1-R1 : " + R1, 50, 1050, mPaintsquare);
-        canvas.drawText("beacon2-R2 : " + R2, 50, 1150, mPaintsquare);
-        canvas.drawText("beacon3-R3 : " + R3, 50, 1250, mPaintsquare);
+//        canvas.drawText("MapScale_Width : " + getWidth(), 50, 850, mPaintsquare);
+//        canvas.drawText("MapScale_Height  : " + getHeight(), 50, 950, mPaintsquare);
+//        canvas.drawText("beacon1-R1 : " + R1, 50, 1050, mPaintsquare);
+//        canvas.drawText("beacon2-R2 : " + R2, 50, 1150, mPaintsquare);
+//        canvas.drawText("beacon3-R3 : " + R3, 50, 1250, mPaintsquare);
 
         //Find constant of circle #2- cirlce #1
         float K_a = (R1 * R1) - (R2 * R2) - (x_1 * x_1) + (x_2 * x_2) - (y_1 * y_1) + (y_2 * y_2);
@@ -370,8 +370,8 @@ public class Navigation extends View {
         canvas.drawText("YOU", (float) ((_x) * 685) - 30, (float) ((_y) * 100) + 60, mPaintsquare);
         Log.d("redDot", "---------->" + _x + "  " + _y);
 
-        canvas.drawText("x : " + _x, 50, 550, mPaintsquare);
-        canvas.drawText("y : " + _y, 50, 650, mPaintsquare);
+//        canvas.drawText("x : " + _x, 50, 550, mPaintsquare);
+//        canvas.drawText("y : " + _y, 50, 650, mPaintsquare);
     }
 
     private void drawPath(final Canvas canvas) {
@@ -414,8 +414,8 @@ public class Navigation extends View {
         _shelf = MapActivity.shelfNum;
         shelfCheck(_shelf);
 
-        canvas.drawText("x : " + X_Start, 50, 250, mPaintsquare);
-        canvas.drawText("y : " + Y_Start, 50, 350, mPaintsquare);
+//        canvas.drawText("x : " + X_Start, 50, 250, mPaintsquare);
+//        canvas.drawText("y : " + Y_Start, 50, 350, mPaintsquare);
 
         Pathfinder.findPath(X_Start, Y_Start, X_Stop, Y_Stop, new OnPathFoundListener() {
             @Override

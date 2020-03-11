@@ -19,7 +19,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 
-import com.example.my_pj01.Models.BTLE_Device;
+import com.example.my_pj01.Models.BeaconModel;
 import com.example.my_pj01.Models.PromotionModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,7 +36,7 @@ import static com.example.my_pj01.App.channel;
 
 public class IndexActivity extends AppCompatActivity {
     public static final int REQUEST_ENABLE_BT = 1;
-    public static HashMap<String, BTLE_Device> mBTDevicesHashMap;
+    public static HashMap<String, BeaconModel> mBTDevicesHashMap;
     private BroadcastReceiver_BTState mBTStateUpdateReceiver;
     private Scanner_BTLE mBTLeScanner;
     private NotificationManagerCompat notificationManager;
@@ -49,7 +49,7 @@ public class IndexActivity extends AppCompatActivity {
     Animation upToDown, downToUp;
     List<PromotionModel> promotionModels = new ArrayList<>();
     PromotionModel promotionModel;
-    BTLE_Device btle_device;
+    BeaconModel btle_device;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("products");
     DatabaseReference beacons = FirebaseDatabase.getInstance().getReference("beacons");
@@ -109,34 +109,29 @@ public class IndexActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //Utils.toast(this, "onStart BLE scan...");
         registerReceiver(mBTStateUpdateReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
     }
 
     @Override
     protected void onResume() {
-        //Utils.toast(this, "Resume BLE scan...");
         super.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //Utils.toast(this, "onPause BLE scan...");
         stopScan();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        //Utils.toast(this, "onStop BLE scan...");
         unregisterReceiver(mBTStateUpdateReceiver);
         stopScan();
     }
 
     @Override
     public void onDestroy() {
-        //Utils.toast(this, "onDestroy BLE scan...");
         super.onDestroy();
     }
 
@@ -147,7 +142,6 @@ public class IndexActivity extends AppCompatActivity {
         if (requestCode == REQUEST_ENABLE_BT) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                //Utils.toast(getApplicationContext(), "Thank you for turning on Bluetooth");
             } else if (resultCode == RESULT_CANCELED) {
                 Utils.toast(getApplicationContext(), "Please turn on Bluetooth");
             }
@@ -173,34 +167,31 @@ public class IndexActivity extends AppCompatActivity {
 
         String name = device.getName();
         String address = device.getAddress();
-        //BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 
         if (address == null) return;
         if (!address.equals(addr_b1) && !address.equals(addr_b2) && !address.equals(addr_b3))
             return;
 
         if (!mBTDevicesHashMap.containsKey(address)) {
-            btle_device = new BTLE_Device(device);
+            btle_device = new BeaconModel(device);
             btle_device.setRSSI(rssi);
 
             mBTDevicesHashMap.put(name, btle_device);
             mBTDevicesHashMap.put(address, btle_device);
 
-            if(address.equals(addr_b1)){
+            if (address.equals(addr_b1)) {
                 DatabaseReference child = beacons.child("beacon1");
                 child.child("uuid").setValue(address).toString();
                 child.child("namespace").setValue(name).toString();
                 child.child("instance").setValue(name + address).toString();
                 child.child("rssi").setValue(rssi).toString();
-            }
-            else if(address.equals(addr_b2)) {
+            } else if (address.equals(addr_b2)) {
                 DatabaseReference child = beacons.child("beacon2");
                 child.child("uuid").setValue(address).toString();
                 child.child("namespace").setValue(name).toString();
                 child.child("instance").setValue(name + address).toString();
                 child.child("rssi").setValue(rssi).toString();
-            }
-            else if(address.equals(addr_b3)){
+            } else if (address.equals(addr_b3)) {
                 DatabaseReference child = beacons.child("beacon3");
                 child.child("uuid").setValue(address).toString();
                 child.child("namespace").setValue(name).toString();
@@ -243,7 +234,6 @@ public class IndexActivity extends AppCompatActivity {
                         public void onCancelled(DatabaseError error) {
                             // Failed to read value
                         }
-                        //NotificationService.addNotification(this,"test","test");
                     });
                 }
                 isState = true;
@@ -255,7 +245,7 @@ public class IndexActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    btle_device = new BTLE_Device();
+                    btle_device = new BeaconModel();
                     btle_device.setAddres(ds.child("uuid").getValue().toString());
                     btle_device.setName(ds.child("namespace").getValue().toString());
                     btle_device.setAddres(ds.child("instance").getValue().toString());
@@ -294,7 +284,6 @@ public class IndexActivity extends AppCompatActivity {
      * Changes the scan button text.
      */
     public void startScan() {
-        //Utils.toast(this, "startScan");
         mBTDevicesHashMap.clear();
         mBTLeScanner.start();
     }
@@ -304,7 +293,6 @@ public class IndexActivity extends AppCompatActivity {
      * Changes the scan button text.
      */
     public void stopScan() {
-        //Utils.toast(this, "Stopscan");
         mBTLeScanner.stop();
     }
 }

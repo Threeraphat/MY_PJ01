@@ -5,18 +5,18 @@ import android.bluetooth.BluetoothDevice;
 /**
  * Created by Kelvin on 5/8/16.
  */
-public class BTLE_Device {
+public class BeaconModel {
 
     private BluetoothDevice bluetoothDevice;
     private int rssi;
     private String text_rssi;
-    private String namespace, uuid, addres;
+    private String namespace, addres;
 
-    public BTLE_Device(BluetoothDevice bluetoothDevice) {
+    public BeaconModel(BluetoothDevice bluetoothDevice) {
         this.bluetoothDevice = bluetoothDevice;
     }
 
-    public BTLE_Device(){
+    public BeaconModel(){
     }
     public String getAddress() {
         return addres;
@@ -24,10 +24,6 @@ public class BTLE_Device {
 
     public void setAddres(String addr){
         this.addres = addr;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     public String getName() {
@@ -40,10 +36,6 @@ public class BTLE_Device {
 
     public void setName(String name) {
         this.namespace = name;
-    }
-
-    public String getUUID() {
-        return bluetoothDevice.getUuids().toString();
     }
 
     public void setRSSI(int rssi) {

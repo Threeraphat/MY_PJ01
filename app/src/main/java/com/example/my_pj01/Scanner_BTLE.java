@@ -71,7 +71,6 @@ public class Scanner_BTLE {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            Log.d("DEBUG-ARM","decoded String : " + ByteArrayToString(scanRecord));
             final int new_rssi = rssi;
             if (rssi > signalStrength) {
                 mHandler.post(new Runnable() {

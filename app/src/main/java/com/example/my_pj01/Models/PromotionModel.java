@@ -1,18 +1,18 @@
 package com.example.my_pj01.Models;
 
 public class PromotionModel{
-    private int id;
+    private int promid;
     private String promotion;
 
     public PromotionModel(){
     }
 
-    public int getId() {
-        return id;
+    public int getProdid() {
+        return promid;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setProdid(int prodid) {
+        this.promid = prodid;
     }
 
     public String getPromotion() {

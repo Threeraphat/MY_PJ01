@@ -24,11 +24,9 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.my_pj01.Models.BTLE_Device;
 import com.example.my_pj01.Models.ProductModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -98,7 +96,7 @@ public class MainAdmin extends AppCompatActivity {
                     productModel.setKey(ds.getKey());
                     productModel.setColumn(ds.child("column").getValue(String.class));
                     productModel.setDescription(ds.child("description").getValue(String.class));
-                    productModel.setId(ds.child("id").getValue(Integer.class));
+                    productModel.setProdid(ds.child("id").getValue(Integer.class));
                     productModel.setName(ds.child("name").getValue(String.class));
                     productModel.setPicture(ds.child("picture").getValue(String.class));
                     productModel.setPrice(ds.child("price").getValue(String.class));
@@ -164,7 +162,7 @@ public class MainAdmin extends AppCompatActivity {
                                     productModel.setKey(productModels.get(position).getKey());
                                     productModel.setColumn(m_column.getText().toString());
                                     productModel.setDescription(m_detail.getText().toString());
-                                    productModel.setId(productModels.get(position).getId());
+                                    productModel.setProdid(productModels.get(position).getProdid());
                                     productModel.setName(m_name.getText().toString());
                                     productModel.setPicture(productModels.get(position).getPicture());
                                     productModel.setPrice(m_price.getText().toString());
@@ -236,7 +234,7 @@ public class MainAdmin extends AppCompatActivity {
                 productModel.setKey(productModels.get(position).getKey());
                 productModel.setColumn(m_column.getText().toString());
                 productModel.setDescription(m_detail.getText().toString());
-                productModel.setId(productModels.get(position).getId());
+                productModel.setProdid(productModels.get(position).getProdid());
                 productModel.setName(m_name.getText().toString());
                 productModel.setPicture(storageReference.getPath());
                 productModel.setPrice(m_price.getText().toString());

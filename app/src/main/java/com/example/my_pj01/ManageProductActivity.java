@@ -5,24 +5,17 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.my_pj01.Models.BTLE_Device;
-import com.example.my_pj01.Models.ProductModel;
-import com.example.my_pj01.Models.PromotionModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -36,8 +29,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class ManageProductActivity extends AppCompatActivity {
@@ -115,9 +106,11 @@ public class ManageProductActivity extends AppCompatActivity {
 
                 if (imageView.getDrawable() == null) {
                     Toast.makeText(ManageProductActivity.this, "Please select image", Toast.LENGTH_SHORT).show();
-                } if(promo.equals("")) {
+                }
+                if (promo.equals("")) {
                     promo = nopromo;
-                } if (name.equals("") || price.equals("") || type.equals("") || description.equals("") || weight.equals("") || row.equals("") || column.equals("") || shelf.equals("")) {
+                }
+                if (name.equals("") || price.equals("") || type.equals("") || description.equals("") || weight.equals("") || row.equals("") || column.equals("") || shelf.equals("")) {
                     Toast.makeText(ManageProductActivity.this, "Please enter data all field", Toast.LENGTH_SHORT).show();
                 } else {
                     if (path != null) {

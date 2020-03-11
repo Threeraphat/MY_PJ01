@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.my_pj01.Models.BTLE_Device;
+import com.example.my_pj01.Models.BeaconModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,11 +20,11 @@ import java.util.List;
 public class Login extends AppCompatActivity {
 
     public static Activity login;
-    BTLE_Device btle_device;
+    BeaconModel btle_device;
     final private String addr_b1 = "30:AE:A4:F4:87:32";
     final private String addr_b2 = "24:6F:28:9D:6E:AE";
     final private String addr_b3 = "A4:CF:12:75:0A:6A";
-    List<BTLE_Device> btle_devices = new ArrayList<>();
+    List<BeaconModel> btle_devices = new ArrayList<>();
     DatabaseReference beacons = FirebaseDatabase.getInstance().getReference("beacons");
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    btle_device = new BTLE_Device();
+                    btle_device = new BeaconModel();
                     btle_device.setAddres(ds.child("uuid").getValue().toString());
                     btle_devices.add(btle_device);
                 }
