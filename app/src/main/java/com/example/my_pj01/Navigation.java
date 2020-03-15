@@ -17,6 +17,7 @@ import com.ichbingrumpig.pathfinder.OnPathFoundListener;
 import com.ichbingrumpig.pathfinder.Pathfinder;
 import com.ichbingrumpig.pathfinder.Settings;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -279,6 +280,7 @@ public class Navigation extends View {
         return (float) d;
     }
 
+    List<Integer> pos = new ArrayList<Integer>();
     private void PointUserCalculate(Canvas canvas) {
         mPaintsquare.reset();
         mPaintsquare.setColor(getResources().getColor(android.R.color.holo_green_light));
@@ -319,7 +321,26 @@ public class Navigation extends View {
         X_Start = (int) (_x * 199.2248f);
         Y_Start = (int) (_y * 220.5930f);
 
-        filterLocation(X_Start, Y_Start);
+        //filterLocation(X_Start, Y_Start);
+
+        pos.add(X_Start);
+        pos.add(Y_Start);
+
+        if(pos.size() != 4){
+            int x0 = pos.get(0);
+            int y0 = pos.get(1);
+            int x1 = pos.get(2);
+            int y1 = pos.get(3);
+            double distance = Math.sqrt((Math.pow((x1-x0), 2)) + (Math.pow((y1-y0), 2)));
+            if(distance >50) {
+                X_Start = x0;
+                Y_Start = y0;
+            }
+            pos.remove(2);
+            pos.remove(3);
+        }
+        //จบ แค่นี้ พรุ่งนี้ลองทดสอบ ตอนเริ่มรันโปรแกรม จุดมันต้องนิ่งอยู่ที่ๆ หนึ่ง เราต้องเดินไปหา แล้วเริ่มจากตรงนั้นครับ
+        // ลองดูครับ มันไม่ควรแกว่งแล้ว ถ้า X_Start, Y_Start มีแค่ตรงนี้
 
         mapEdgeCheck(X_Start, Y_Start);
         userCheckStartX(X_Start);
