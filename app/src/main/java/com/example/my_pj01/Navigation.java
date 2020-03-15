@@ -18,50 +18,39 @@ import com.ichbingrumpig.pathfinder.Pathfinder;
 import com.ichbingrumpig.pathfinder.Settings;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 public class Navigation extends View {
     private int numColumns, numRows;
     private int cellWidth, cellHeight;
     private Paint blackPaint = new Paint();
-    private boolean[][] cellChecked;
     private Rect mRectsquare;
     String _shelf;
     private Paint mPaintsquare;
     public static int X_Start = 0, Y_Start = 0;
     public static int X_Stop = 0, Y_Stop = 0;
+    public double result;
 
     int[][] gameGrid;
     private static final int GRID_VALUE_SHELF = 1;
     private static final int GRID_VALUE_FREE = 0;
     private static final int GRID_VALUE_BOULDERS_STARTING_VALUE = 4;
-
-    ArrayList<Integer> RSSIAverage_1 = new ArrayList();
-    ArrayList<Integer> RSSIAverage_2 = new ArrayList();
-    ArrayList<Integer> RSSIAverage_3 = new ArrayList();
-    int R1_sum, R2_sum, R3_sum = 0;
     float R1, R2, R3 = 0;
-    ///////////////////////////////////////////////////
-    //  ARM ROOM
-    //y = 6.0 M
-    //x = 3.9 M
-    //Beacon_1 x = 1.95f y = 0
-    //Beacon_2 x = 0 y = 3f
-    //Beacon_3 x = 3.9f y = 3f
-
-    //float x_1 = 1.95f, x_2 = 0 , x_3 = 3.90f;
-    //float y_1 = 0, y_2 = 3.00f, y_3 = 3.00f;
-    ///////////////////////////////////////////////////
-
-    //  TABLE 150 x 180 (x,y)
-    //  1028 Pixel / 1.5 m(150cm)  = 685 (X)
-    //  1339 Pixel / 1.8 m(180cm) = 744 (Y)
-    float x_1 = 0.75f, x_2 = 0, x_3 = 1.5f;
-    float y_1 = 0, y_2 = 0.9f, y_3 = 0.9f;
+    //////////////////////////////////////////////////
+    //Q412
+    // map  x pixel 1028
+    // map y pixel 1339
+    // x = 516 cm ( 5.16 m )
+    // y = 607 cm ( 6.07 m )
+    // 1028 / 5.16 = 199.2248 px per meter in px (X)
+    // 1339 / 6.07 = 220.5930 px per meter in px (Y)
+    float x_1 = 2.58f, x_2 = 0, x_3 = 5.16f;
+    float y_1 = 0, y_2 = 3.035f, y_3 = 3.035f;
 
     //////////////////////////////////////////////
     // ROOM MNR
@@ -128,19 +117,6 @@ public class Navigation extends View {
         }
         cellWidth = getWidth() / numColumns;
         cellHeight = getHeight() / numRows;
-        cellChecked = new boolean[numColumns][numRows];
-    }
-
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            int column = (int) (event.getX() / cellWidth);
-            int row = (int) (event.getY() / cellHeight);
-            cellChecked[column][row] = !cellChecked[column][row];
-            //invalidate();
-        }
-        return true;
     }
 
     @Override
@@ -153,16 +129,16 @@ public class Navigation extends View {
         PointUserCalculate(canvas);
         drawPath(canvas);
         drawShelf(canvas);
-        postInvalidateDelayed(1);
+        postInvalidateDelayed(50);
     }
 
     int rssi1 = 0, rssi2 = 0, rssi3 = 0;
-    int measuredPower = -65; ////hard coded power value. Usually ranges between -59 to -65
+    int measuredPower = -70; ////hard coded power value. Usually ranges between -59 to -70
 
     private void ReceiveBeacon() {
         Set set = IndexActivity.mBTDevicesHashMap.entrySet();
 
-        if(set == null) return;
+        if (set == null) return;
         // Get an iterator
         Iterator i = set.iterator();
 
@@ -171,31 +147,16 @@ public class Navigation extends View {
             Map.Entry me = (Map.Entry) i.next();
             if (me.getKey().equals("Beacon_1")) {
                 rssi1 = ((BeaconModel) me.getValue()).getRSSI();
-                RSSIAverage_1.addAll(Collections.singleton(rssi1));
-                if (RSSIAverage_1.size() > 3) {
-                    R1_sum = AverageRSSI(RSSIAverage_1); //R1_avg
-                    R1 = DistanceCalculate(R1_sum, measuredPower); //D1
-                    if (R1 > 1.8f) R1 = 1.8f;
-                    RSSIAverage_1.clear();
-                }
+                R1 = DistanceCalculate(rssi1, measuredPower); //D1
+                if (R1 > 3.035f) R1 = 3.035f;
             } else if (me.getKey().equals("Beacon_2")) {
                 rssi2 = ((BeaconModel) me.getValue()).getRSSI();
-                RSSIAverage_2.addAll(Collections.singleton(rssi2));
-                if (RSSIAverage_2.size() > 3) {
-                    R2_sum = AverageRSSI(RSSIAverage_2);
-                    R2 = DistanceCalculate(R2_sum, measuredPower);
-                    if (R2 > 1.5f) R2 = 1.5f;
-                    RSSIAverage_2.clear();
-                }
+                R2 = DistanceCalculate(rssi2, measuredPower);
+                if (R2 > 2.575f) R2 = 2.575f;
             } else if (me.getKey().equals("Beacon_3")) {
                 rssi3 = ((BeaconModel) me.getValue()).getRSSI();
-                RSSIAverage_3.addAll(Collections.singleton(rssi3));
-                if (RSSIAverage_3.size() > 3) {
-                    R3_sum = AverageRSSI(RSSIAverage_3);
-                    R3 = DistanceCalculate(R3_sum, measuredPower);
-                    if (R3 > 1.5f) R3 = 1.5f;
-                    RSSIAverage_3.clear();
-                }
+                R3 = DistanceCalculate(rssi3, measuredPower);
+                if (R3 > 2.575f) R3 = 2.575f;
             }
         }
     }
@@ -232,8 +193,6 @@ public class Navigation extends View {
         mPaintsquare.setTextSize(30);
         mPaintsquare.setAntiAlias(true);
 
-        double dist_real = 744;
-
         for (int i = 0; i < numColumns; i++) {
             for (int j = 0; j < numRows; j++) {
                 if (i == 0 && j > 13 && j < 16) {
@@ -263,17 +222,17 @@ public class Navigation extends View {
         mPaintsquare.setStyle(Paint.Style.STROKE);
         mPaintsquare.setColor(getResources().getColor(android.R.color.holo_green_light));
         mPaintsquare.setStrokeWidth(5);
-        canvas.drawCircle((numColumns / 2) * cellWidth, 0 * cellHeight, R1 * (float) dist_real, mPaintsquare);
+        canvas.drawCircle((numColumns / 2) * cellWidth, 0 * cellHeight, R1 * 240.5930f, mPaintsquare); //220.5930f
 
         mPaintsquare.setStyle(Paint.Style.STROKE);
         mPaintsquare.setColor(getResources().getColor(android.R.color.holo_red_light));
         mPaintsquare.setStrokeWidth(5);
-        canvas.drawCircle(0 * cellWidth, (numRows / 2) * cellHeight, R2 * (float) dist_real, mPaintsquare);
+        canvas.drawCircle(0 * cellWidth, (numRows / 2) * cellHeight, R2 * 199.2248f, mPaintsquare);
 
         mPaintsquare.setStyle(Paint.Style.STROKE);
         mPaintsquare.setColor(getResources().getColor(android.R.color.holo_blue_light));
         mPaintsquare.setStrokeWidth(5);
-        canvas.drawCircle(numColumns * cellWidth, (numRows / 2) * cellHeight, R3 * (float) dist_real, mPaintsquare);
+        canvas.drawCircle(numColumns * cellWidth, (numRows / 2) * cellHeight, R3 * 199.2248f, mPaintsquare);
     }
 
     private void drawShelf(Canvas canvas) {
@@ -281,34 +240,34 @@ public class Navigation extends View {
         mPaintsquare.setTextSize(30);
         mPaintsquare.setAntiAlias(true);
 
-        for (int i = 0; i < numColumns; i++) {
+        for (int x = 0; x < numColumns; x++) {
             for (int j = 0; j < numRows; j++) {
-                if (i > 9 && i < 15 && j == 6) { ////Shelf 1
+                if (x > 9 && x < 15 && j == 6) { ////Shelf 1
                     mPaintsquare.setStyle(Paint.Style.FILL);
                     mPaintsquare.setColor(getResources().getColor(android.R.color.darker_gray));
-                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
-                    if (i == 10) {
+                    canvas.drawRect(x * cellWidth, j * cellHeight, (x + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
+                    if (x == 10) {
                         mPaintsquare.setStyle(Paint.Style.FILL);
                         mPaintsquare.setColor(getResources().getColor(android.R.color.holo_blue_dark));
-                        canvas.drawText("Shelf 1", (i + 1) * cellWidth, j * cellHeight, mPaintsquare);
+                        canvas.drawText("Shelf 1", (x + 1) * cellWidth, j * cellHeight, mPaintsquare);
                     }
-                } else if (i > 9 && i < 15 && j == 7) {
+                } else if (x > 9 && x < 15 && j == 7) {
                     mPaintsquare.setStyle(Paint.Style.FILL);
                     mPaintsquare.setColor(getResources().getColor(android.R.color.darker_gray));
-                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
-                } else if (i > 19 && i < 25 && j == 6) { ////Shelf 2
+                    canvas.drawRect(x * cellWidth, j * cellHeight, (x + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
+                } else if (x > 19 && x < 25 && j == 6) { ////Shelf 2
                     mPaintsquare.setStyle(Paint.Style.FILL);
                     mPaintsquare.setColor(getResources().getColor(android.R.color.darker_gray));
-                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
-                    if (i == 20) {
+                    canvas.drawRect(x * cellWidth, j * cellHeight, (x + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
+                    if (x == 20) {
                         mPaintsquare.setStyle(Paint.Style.FILL);
                         mPaintsquare.setColor(getResources().getColor(android.R.color.holo_blue_dark));
-                        canvas.drawText("Shelf 2", (i + 1) * cellWidth, j * cellHeight, mPaintsquare);
+                        canvas.drawText("Shelf 2", (x + 1) * cellWidth, j * cellHeight, mPaintsquare);
                     }
-                } else if (i > 19 && i < 25 && j == 7) {
+                } else if (x > 19 && x < 25 && j == 7) {
                     mPaintsquare.setStyle(Paint.Style.FILL);
                     mPaintsquare.setColor(getResources().getColor(android.R.color.darker_gray));
-                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
+                    canvas.drawRect(x * cellWidth, j * cellHeight, (x + 1) * cellWidth, (j + 1) * cellHeight, mPaintsquare);
                 }
             }
         }
@@ -330,11 +289,11 @@ public class Navigation extends View {
         mPaintsquare.setStyle(Paint.Style.FILL);
         mPaintsquare.setAntiAlias(true);
 
-//        canvas.drawText("MapScale_Width : " + getWidth(), 50, 850, mPaintsquare);
-//        canvas.drawText("MapScale_Height  : " + getHeight(), 50, 950, mPaintsquare);
-//        canvas.drawText("beacon1-R1 : " + R1, 50, 1050, mPaintsquare);
-//        canvas.drawText("beacon2-R2 : " + R2, 50, 1150, mPaintsquare);
-//        canvas.drawText("beacon3-R3 : " + R3, 50, 1250, mPaintsquare);
+        canvas.drawText("MapScale_Width : " + getWidth(), 50, 850, mPaintsquare);
+        canvas.drawText("MapScale_Height  : " + getHeight(), 50, 950, mPaintsquare);
+        canvas.drawText("beacon1-R1 : " + R1, 50, 1050, mPaintsquare);
+        canvas.drawText("beacon2-R2 : " + R2, 50, 1150, mPaintsquare);
+        canvas.drawText("beacon3-R3 : " + R3, 50, 1250, mPaintsquare);
 
         //Find constant of circle #2- cirlce #1
         float K_a = (R1 * R1) - (R2 * R2) - (x_1 * x_1) + (x_2 * x_2) - (y_1 * y_1) + (y_2 * y_2);
@@ -359,19 +318,64 @@ public class Navigation extends View {
         if (_x < 0) _x *= -1;
         if (_y < 0) _y *= -1;
 
-        X_Start = (int) (_x * 685);
-        Y_Start = (int) (_y * 100);
+        X_Start = (int) (_x * 199.2248f);
+        Y_Start = (int) (_y * 220.5930f);
 
-        userCheckStart(X_Start, Y_Start);
+        filterLocation(X_Start, Y_Start);
 
-        //Red dot
+        mapEdgeCheck(X_Start, Y_Start);
+        userCheckStartX(X_Start);
+        userCheckStartY(Y_Start);
+
         canvas.drawCircle((float) (X_Start), (float) (Y_Start), 25, mPaintsquare);
         mPaintsquare.setColor(getResources().getColor(android.R.color.black));
-        canvas.drawText("YOU", (float) ((_x) * 685) - 30, (float) ((_y) * 100) + 60, mPaintsquare);
-        Log.d("redDot", "---------->" + _x + "  " + _y);
+        canvas.drawText("YOU", (float) X_Start - 30, (float) Y_Start + 60, mPaintsquare);
 
-//        canvas.drawText("x : " + _x, 50, 550, mPaintsquare);
-//        canvas.drawText("y : " + _y, 50, 650, mPaintsquare);
+        Log.d("redDot", "---------->" + _x + "  " + _y);
+        canvas.drawText("x : " + _x, 50, 550, mPaintsquare);
+        canvas.drawText("y : " + _y, 50, 650, mPaintsquare);
+    }
+
+    List listlocation_Y = new ArrayList();
+    List listlocation_X = new ArrayList();
+
+    private void filterLocation(double x, double y) {
+        double oldLocationX, nextLocationX;
+        double oldLocationY, nextLocationY;
+        int i = 0;
+        listlocation_X.add(x);
+        listlocation_Y.add(y);
+
+        if (listlocation_X.size() > 1 && listlocation_Y.size() > 1) {
+            oldLocationX = (double) listlocation_X.get(0);
+            nextLocationX = (double) listlocation_X.get(1);
+            oldLocationY = (double) listlocation_Y.get(0);
+            nextLocationY = (double) listlocation_Y.get(1);
+            double sumY = (nextLocationY - oldLocationY);
+            double sumX = (nextLocationX - oldLocationX);
+            result = Math.sqrt((Math.pow(sumY, 2)) + (Math.pow(sumX, 2)));
+            Log.d("TAG_result", "----result----->" + result);
+            if (result <= 300) {
+                X_Start = (int) nextLocationX;
+                Y_Start = (int) nextLocationY;
+                listlocation_Y.clear();
+                listlocation_X.clear();
+                listlocation_X.add(nextLocationX);
+                listlocation_Y.add(nextLocationY);
+            } else if (result > 300) {
+                X_Start = (int) oldLocationX;
+                Y_Start = (int) oldLocationY;
+                listlocation_Y.clear();
+                listlocation_X.clear();
+                listlocation_X.add(oldLocationX);
+                listlocation_Y.add(oldLocationY);
+                i++;
+                if(i == 5){
+                    X_Start = (int) nextLocationX;
+                    Y_Start = (int) nextLocationY;
+                }
+            }
+        }
     }
 
     private void drawPath(final Canvas canvas) {
@@ -384,12 +388,12 @@ public class Navigation extends View {
 
         gameGrid = new int[getWidth()][getHeight()];
         //create block shelf
-        for (int i = 320; i <= 858; i++) {
-            for (int j = 245; j <= 370; j++)
-                if (i > 319 && i < 535 && j > 245 && j < 370) { // shelf 1
-                    gameGrid[i][j] = 1;
-                } else if (i > 664 && i < 858 && j > 245 && j < 370) { // shelf 2
-                    gameGrid[i][j] = 1;
+        for (int x = 320; x <= 858; x++) {
+            for (int y = 245; y <= 370; y++)
+                if (x > 319 && x < 535 && y > 244 && y < 371) { // shelf 1
+                    gameGrid[x][y] = 1;
+                } else if (x > 664 && x < 858 && y > 244 && y < 371) { // shelf 2
+                    gameGrid[x][y] = 1;
                 }
         }
 
@@ -402,7 +406,7 @@ public class Navigation extends View {
             @Override
             public SparseArray<Float> setTravellingCostRules() {
                 SparseArray<Float> travellingCostRules = new SparseArray<>();
-                travellingCostRules.put(GRID_VALUE_FREE, 1f);
+                //travellingCostRules.put(GRID_VALUE_FREE, 1f);
                 return travellingCostRules;
             }
 
@@ -414,8 +418,8 @@ public class Navigation extends View {
         _shelf = MapActivity.shelfNum;
         shelfCheck(_shelf);
 
-//        canvas.drawText("x : " + X_Start, 50, 250, mPaintsquare);
-//        canvas.drawText("y : " + Y_Start, 50, 350, mPaintsquare);
+        canvas.drawText("x : " + X_Start, 50, 250, mPaintsquare);
+        canvas.drawText("y : " + Y_Start, 50, 350, mPaintsquare);
 
         Pathfinder.findPath(X_Start, Y_Start, X_Stop, Y_Stop, new OnPathFoundListener() {
             @Override
@@ -440,33 +444,30 @@ public class Navigation extends View {
         }
     }
 
-    private void userCheckStart(int x, int y) {
-        if (x > 1018 || y > 1319) {
-            if (x > 1018) X_Start = 1018;
-            if (y > 1319) Y_Start = 1319;
-        } if (x < 20 || y < 20) {
-            if (x < 20) X_Start = 20;
-            if (y < 20) Y_Start = 20;
-        } if (x > 310 && x < 540 && y > 240 && y < 385) { //// shelf 1 check
+    private void mapEdgeCheck(int x, int y) {
+        if (x > 1027) X_Start = 1027;
+        else if (x < 1) X_Start = 1;
+        if (y > 1338) Y_Start = 1338;
+        else if (y < 1) Y_Start = 1;
+    }
+
+    private void userCheckStartX(int x) {
+        if (x > 310 && x < 540) { //// shelf 1 check
             if (x > 310 && x < 205) X_Start = 310;
-            if (y > 240 && y < 308) Y_Start = 240;
-            if (x > 204 && x < 540) X_Start = 540;
-            if (y > 307 && y < 385) Y_Start = 385;
-        } if (x > 660 && x < 860 && y > 240 && y < 385) { //// shelf 2 check
+            else if (x > 204 && x < 540) X_Start = 540;
+        } else if (x > 660 && x < 860) { //// shelf 2 check
             if (x > 660 && x < 759) X_Start = 660;
-            if (y > 240 && y < 308) Y_Start = 240;
-            if (x > 758 && x < 860) X_Start = 860;
-            if (y > 307 && y < 385) Y_Start = 385;
+            else if (x > 758 && x < 860) X_Start = 860;
         }
     }
 
-    private int AverageRSSI(List<Integer> RSSI_list) {
-        Integer sum = 0;
-        if (!RSSI_list.isEmpty()) {
-            for (Integer rssi : RSSI_list) {
-                sum += rssi;
-            }
+    private void userCheckStartY(int y) {
+        if (y > 240 && y < 385) { //// shelf 1 check
+            if (y > 240 && y < 308) Y_Start = 240;
+            else if (y > 307 && y < 385) Y_Start = 385;
+        } else if (y > 240 && y < 385) { //// shelf 2 check
+            if (y > 240 && y < 308) Y_Start = 240;
+            else if (y > 307 && y < 385) Y_Start = 385;
         }
-        return sum / RSSI_list.size();
     }
 }

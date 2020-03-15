@@ -96,7 +96,6 @@ public class MainAdmin extends AppCompatActivity {
                     productModel.setKey(ds.getKey());
                     productModel.setColumn(ds.child("column").getValue(String.class));
                     productModel.setDescription(ds.child("description").getValue(String.class));
-                    productModel.setProdid(ds.child("id").getValue(Integer.class));
                     productModel.setName(ds.child("name").getValue(String.class));
                     productModel.setPicture(ds.child("picture").getValue(String.class));
                     productModel.setPrice(ds.child("price").getValue(String.class));

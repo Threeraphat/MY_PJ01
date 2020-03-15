@@ -210,6 +210,7 @@ public class IndexActivity extends AppCompatActivity {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                 promotionModel = new PromotionModel();
+
                                 promotionModel.setPromotion(ds.child("promotion").getValue().toString().toLowerCase());
                                 if (promotionModels.size() > 0) {
                                     checkDuplicationPromotion(promotionModels, promotionModel);
