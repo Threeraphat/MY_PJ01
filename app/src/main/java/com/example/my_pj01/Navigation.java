@@ -335,13 +335,19 @@ public class Navigation extends View {
             if(distance >50) {
                 X_Start = x0;
                 Y_Start = y0;
+                pos.remove(2);
+                pos.remove(3);
+            }else{
+                X_Start = x1;
+                Y_Start = y1;
+                pos.clear();
+                pos.add(x1);
+                pos.add(y1);
             }
-            pos.remove(2);
-            pos.remove(3);
+
         }
         //จบ แค่นี้ พรุ่งนี้ลองทดสอบ ตอนเริ่มรันโปรแกรม จุดมันต้องนิ่งอยู่ที่ๆ หนึ่ง เราต้องเดินไปหา แล้วเริ่มจากตรงนั้นครับ
         // ลองดูครับ มันไม่ควรแกว่งแล้ว ถ้า X_Start, Y_Start มีแค่ตรงนี้
-        //test
 
         mapEdgeCheck(X_Start, Y_Start);
         userCheckStartX(X_Start);
