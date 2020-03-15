@@ -341,6 +341,7 @@ public class Navigation extends View {
         }
         //จบ แค่นี้ พรุ่งนี้ลองทดสอบ ตอนเริ่มรันโปรแกรม จุดมันต้องนิ่งอยู่ที่ๆ หนึ่ง เราต้องเดินไปหา แล้วเริ่มจากตรงนั้นครับ
         // ลองดูครับ มันไม่ควรแกว่งแล้ว ถ้า X_Start, Y_Start มีแค่ตรงนี้
+        //test
 
         mapEdgeCheck(X_Start, Y_Start);
         userCheckStartX(X_Start);
