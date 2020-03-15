@@ -19,10 +19,8 @@ import com.ichbingrumpig.pathfinder.Settings;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
 public class Navigation extends View {
@@ -338,11 +336,10 @@ public class Navigation extends View {
 
     List listlocation_Y = new ArrayList();
     List listlocation_X = new ArrayList();
-
+    int i = 0;
     private void filterLocation(double x, double y) {
         double oldLocationX, nextLocationX;
         double oldLocationY, nextLocationY;
-        int i = 0;
         listlocation_X.add(x);
         listlocation_Y.add(y);
 
@@ -373,6 +370,7 @@ public class Navigation extends View {
                 if(i == 5){
                     X_Start = (int) nextLocationX;
                     Y_Start = (int) nextLocationY;
+                    i = 0;
                 }
             }
         }
