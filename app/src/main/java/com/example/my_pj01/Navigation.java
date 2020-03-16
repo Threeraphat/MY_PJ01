@@ -128,13 +128,14 @@ public class Navigation extends View {
         PointUserCalculate(canvas);
         drawPath(canvas);
         drawShelf(canvas);
-        postInvalidateDelayed(50);
+        postInvalidateDelayed(5);
     }
 
     int rssi1 = 0, rssi2 = 0, rssi3 = 0;
     int measuredPower = -70; ////hard coded power value. Usually ranges between -59 to -70
 
     private void ReceiveBeacon() {
+
         Set set = IndexActivity.mBTDevicesHashMap.entrySet();
 
         if (set == null) return;
@@ -280,7 +281,9 @@ public class Navigation extends View {
         return (float) d;
     }
 
+    int i = 0;
     List<Integer> pos = new ArrayList<Integer>();
+
     private void PointUserCalculate(Canvas canvas) {
         mPaintsquare.reset();
         mPaintsquare.setColor(getResources().getColor(android.R.color.holo_green_light));
@@ -321,33 +324,38 @@ public class Navigation extends View {
         X_Start = (int) (_x * 199.2248f);
         Y_Start = (int) (_y * 220.5930f);
 
-        //filterLocation(X_Start, Y_Start);
-
         pos.add(X_Start);
         pos.add(Y_Start);
 
-        if(pos.size() != 4){
+        if (pos.size() == 4) {
             int x0 = pos.get(0);
             int y0 = pos.get(1);
             int x1 = pos.get(2);
             int y1 = pos.get(3);
-            double distance = Math.sqrt((Math.pow((x1-x0), 2)) + (Math.pow((y1-y0), 2)));
-            if(distance >50) {
+            double distance = Math.sqrt((Math.pow((x0 - x1), 2)) + (Math.pow((y0 - y1), 2)));
+            distance = distance / 1339;
+            if (distance > 1.34f) {
                 X_Start = x0;
                 Y_Start = y0;
-                pos.remove(2);
-                pos.remove(3);
-            }else{
+                i++;
+                if (i == 10) {
+                    X_Start = x1;
+                    Y_Start = y1;
+                    pos.clear();
+                    i = 0;
+                } else {
+                    pos.add(x0);
+                    pos.add(y0);
+                }
+
+            } else {
                 X_Start = x1;
                 Y_Start = y1;
                 pos.clear();
                 pos.add(x1);
                 pos.add(y1);
             }
-
         }
-        //จบ แค่นี้ พรุ่งนี้ลองทดสอบ ตอนเริ่มรันโปรแกรม จุดมันต้องนิ่งอยู่ที่ๆ หนึ่ง เราต้องเดินไปหา แล้วเริ่มจากตรงนั้นครับ
-        // ลองดูครับ มันไม่ควรแกว่งแล้ว ถ้า X_Start, Y_Start มีแค่ตรงนี้
 
         mapEdgeCheck(X_Start, Y_Start);
         userCheckStartX(X_Start);
@@ -360,48 +368,6 @@ public class Navigation extends View {
         Log.d("redDot", "---------->" + _x + "  " + _y);
         canvas.drawText("x : " + _x, 50, 550, mPaintsquare);
         canvas.drawText("y : " + _y, 50, 650, mPaintsquare);
-    }
-
-    List listlocation_Y = new ArrayList();
-    List listlocation_X = new ArrayList();
-    int i = 0;
-    private void filterLocation(double x, double y) {
-        double oldLocationX, nextLocationX;
-        double oldLocationY, nextLocationY;
-        listlocation_X.add(x);
-        listlocation_Y.add(y);
-
-        if (listlocation_X.size() > 1 && listlocation_Y.size() > 1) {
-            oldLocationX = (double) listlocation_X.get(0);
-            nextLocationX = (double) listlocation_X.get(1);
-            oldLocationY = (double) listlocation_Y.get(0);
-            nextLocationY = (double) listlocation_Y.get(1);
-            double sumY = (nextLocationY - oldLocationY);
-            double sumX = (nextLocationX - oldLocationX);
-            result = Math.sqrt((Math.pow(sumY, 2)) + (Math.pow(sumX, 2)));
-            Log.d("TAG_result", "----result----->" + result);
-            if (result <= 300) {
-                X_Start = (int) nextLocationX;
-                Y_Start = (int) nextLocationY;
-                listlocation_Y.clear();
-                listlocation_X.clear();
-                listlocation_X.add(nextLocationX);
-                listlocation_Y.add(nextLocationY);
-            } else if (result > 300) {
-                X_Start = (int) oldLocationX;
-                Y_Start = (int) oldLocationY;
-                listlocation_Y.clear();
-                listlocation_X.clear();
-                listlocation_X.add(oldLocationX);
-                listlocation_Y.add(oldLocationY);
-                i++;
-                if(i == 5){
-                    X_Start = (int) nextLocationX;
-                    Y_Start = (int) nextLocationY;
-                    i = 0;
-                }
-            }
-        }
     }
 
     private void drawPath(final Canvas canvas) {
