@@ -39,6 +39,7 @@ public class TypeActivity extends AppCompatActivity {
         init();
 
     }
+
     private void init() {
         dataRecyclerView = findViewById(R.id.re_list_type);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -59,6 +60,7 @@ public class TypeActivity extends AppCompatActivity {
                     }
                     productModels.add(productModel);
                 }
+
                 LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext());
                 dataRecyclerView.setLayoutManager(manager);
                 adapter = new TypeDataAdapter(getApplicationContext(), productModels);

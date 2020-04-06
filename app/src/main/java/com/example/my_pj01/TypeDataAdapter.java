@@ -96,7 +96,6 @@ public class TypeDataAdapter extends RecyclerView.Adapter<TypeDataAdapter.ViewHo
                     if(productItem.getType().toLowerCase().contains(filterPattern)){
                         filteredList.add(productItem);
                     }
-
                 }
             }
             FilterResults results = new FilterResults();

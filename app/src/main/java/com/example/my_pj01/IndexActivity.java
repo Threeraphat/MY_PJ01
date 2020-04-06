@@ -135,6 +135,7 @@ public class IndexActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    //check bluetooth enable
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -148,6 +149,7 @@ public class IndexActivity extends AppCompatActivity {
         }
     }
 
+    //check promotion duplicate
     private void checkDuplicationPromotion(List<PromotionModel> promoList, PromotionModel promotionModel) {
         for (Iterator<PromotionModel> iterator = promoList.iterator(); iterator.hasNext(); ) {
             if (iterator.next().getPromotion().equalsIgnoreCase(promotionModel.getPromotion())) {
@@ -156,12 +158,7 @@ public class IndexActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Adds a device to the ArrayList and Hashmap that the ListAdapter is keeping track of.
-     *
-     * @param device the BluetoothDevice to be added
-     * @param rssi   the rssi of the BluetoothDevice
-     */
+     //Adds a device to the ArrayList and Hashmap that the ListAdapter is keeping track of
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void addDevice(BluetoothDevice device, int rssi) {
 
@@ -242,6 +239,7 @@ public class IndexActivity extends AppCompatActivity {
                 isState = true;
             }
         }
+        //Read beacon data from firebasae
         beacons.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -261,6 +259,7 @@ public class IndexActivity extends AppCompatActivity {
         });
     }
 
+    //set notification and notification to mobile
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void addNotification(String title, String message) {
         Notification notification = new NotificationCompat.Builder(this, channel.getId())
@@ -279,20 +278,15 @@ public class IndexActivity extends AppCompatActivity {
         notificationManager.notify(1, notification);
     }
 
-    /**
-     * Clears the ArrayList and Hashmap the ListAdapter is keeping track of.
-     * Starts Scanner_BTLE.
-     * Changes the scan button text.
-     */
+
+     // Clears the ArrayList and Hashmap the ListAdapter is keeping track of
+     // Starts Scanner_BTLE
     public void startScan() {
         mBTDevicesHashMap.clear();
         mBTLeScanner.start();
     }
 
-    /**
-     * Stops Scanner_BTLE
-     * Changes the scan button text.
-     */
+     // Stops Scanner_BTLE
     public void stopScan() {
         mBTLeScanner.stop();
     }

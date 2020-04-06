@@ -11,9 +11,6 @@ import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 
-/**
- * Created by Kelvin on 4/20/16.
- */
 public class Scanner_BTLE {
 
     private IndexActivity ma;
